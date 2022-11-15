@@ -1,6 +1,6 @@
 # nonebot_plugin_zyk_novelai
 
-### 基于4chan魔改版NovelAILeaks(naifu)制作，白嫖的就不要什么自行车了
+### 基于4chan魔改版NovelAILeaks(naifu)制作，白嫖的就不要什么自行车了。（基础版，功能后面陆续会加上）
 
 ### 安装方式
 ```

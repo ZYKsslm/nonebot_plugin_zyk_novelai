@@ -20,9 +20,9 @@ pip install nonebot_plugin_zyk_novelai
 ### [设置](config.py)
 怕有人忘记就写一下 ~~虽然就两个变量，但比较有仪式感不是么~~
 
-|                   get_url                    | proxy_port |
-|:--------------------------------------------:|:----------:|
-| https://THIS-IS-A-SAMPLE.trycloudflare.com/  | port(num)  |
+|                   get_url                    |  proxy_port  |
+|:--------------------------------------------:|:------------:|
+| https://THIS-IS-A-SAMPLE.trycloudflare.com/  |  port number |
 
 ### 用法
 #### *不愿意看的可以直接去看源码*

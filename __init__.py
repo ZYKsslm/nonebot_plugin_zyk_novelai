@@ -3,34 +3,45 @@
 from nonebot.adapters.onebot.v11 import MessageEvent, Message, MessageSegment, GROUP, PRIVATE_FRIEND
 from nonebot.typing import T_State
 from nonebot.permission import SUPERUSER
-from nonebot import on_regex, on_fullmatch
+from nonebot import on_regex, on_fullmatch, on_startswith
 from nonebot.log import logger
 from .work import get_data, get_userid, get_userimg, AsyncDownloadFile
 from .config import proxy_port, get_url
 from base64 import b64encode, b64decode
 from re import findall
 
-
 # 构造响应器
+set_port = on_regex(pattern=r'set_port:(?P<port>\d+)', permission=SUPERUSER, priority=5, block=True)
 set_url = on_regex(pattern=r'set_url:(?P<url>.*/)', permission=SUPERUSER, priority=5, block=True)
-img2img = on_fullmatch(msg="以图生图", permission=GROUP | PRIVATE_FRIEND, priority=10, block=True)
-check_url = on_fullmatch(msg=("查看后端", "查看url", "查看后端url", "check url"),
-                         permission=SUPERUSER, priority=5, block=True)
+img2img = on_startswith(msg=("以图生图", "img2img"), permission=GROUP | PRIVATE_FRIEND, priority=10, block=True)
+check_state = on_fullmatch(msg="check state", permission=SUPERUSER, priority=5, block=True)
 process_img = on_regex(pattern=r"^(?P<mode>ai绘图|AI绘图|ai作图|AI作图) size=(?P<size>\d+x\d+) prompt=(?P<prompt>.*)",
                        permission=GROUP | PRIVATE_FRIEND, priority=10, block=True)
 
-proxies = {
-    "http://": f"http://127.0.0.1:{proxy_port}",
-    "https://": f"http://127.0.0.1:{proxy_port}"
-}
-post_url = get_url
+port = proxy_port
+post_url = get_url + "generate-stream"
+
 # 设置一个全局变量，记录bot的状态，（同时控制bot只能同时处理一次请求）
 switch = True
 
+proxies = {
+    "http://": f"http://127.0.0.1:{port}",
+    "https://": f"http://127.0.0.1:{port}"
+}
 
-@check_url.handle()
+
+@check_state.handle()
 async def _():
-    await check_url.finish(f"当前后端url为：{post_url}")
+    await check_state.finish(f"当前后端url为：{post_url}，本地代理端口号为：{port}")
+
+
+@set_port.handle()
+async def _(state: T_State):
+    global port
+    info = list(state["_matched_groups"])
+    port = info[0]
+    logger.success(f"your local proxy port:{port}")
+    await set_port.finish("本地代理端口设置成功，设置将在下一次请求时启用")
 
 
 @set_url.handle()
@@ -38,13 +49,9 @@ async def _(state: T_State):
     global post_url
     info = list(state["_matched_groups"])
     url = info[0]
-    if get_url == "":
-        post_url = url + "generate-stream"
-        logger.success(f"your post url:{post_url}")
-        await set_url.finish(f"url设置成功，设置将在下一次请求时启用")
-    else:
-        logger.warning("config中已有url!")
-        await set_url.finish("设置失败")
+    post_url = url + "generate-stream"
+    logger.success(f"your post url:{post_url}")
+    await set_url.finish(f"url设置成功，设置将在下一次请求时启用")
 
 
 @process_img.handle()
@@ -124,7 +131,7 @@ async def _(event: MessageEvent):
             await img2img.finish(Message(fr"[CQ:at,qq={id_}]请发送图片！"))
         # 下载用户发的图片
         switch = False
-        img_data = await AsyncDownloadFile(url=img_url, proxies=proxies, timeout=5)
+        img_data = await AsyncDownloadFile(url=img_url, proxies=proxies)
         if img_data[0] is False:
             switch = True
             logger.error(f"用户图片获取失败:{img_data[1]}")

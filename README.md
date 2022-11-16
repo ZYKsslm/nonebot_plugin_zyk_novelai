@@ -31,7 +31,7 @@ nb plugin install nonebot_plugin_zyk_novelai
 ### 用法
 #### *不愿意看的可以直接去看源码*
 
-##### 查看当前后端URL
+查看当前后端URL
 
       查看后端
 
@@ -42,19 +42,19 @@ nb plugin install nonebot_plugin_zyk_novelai
       check url
 
 
-##### 设置后端URL
+设置后端URL
 ```
 set_url:https://THIS-IS-A-SAMPLE.trycloudflare.com/
 ```
 
-##### 普通绘图指令
+普通绘图指令
 
       ai绘图 | AI绘图 | ai作图 | AI作图 size= prompt=
 
       例子：
          ai绘图 size=512x512 prompt={solo}, {{masterpiece}}, {{best quality}}, finely detail, meticulous painting
 
-##### 以图生图指令
+以图生图指令
 和普通的差不多，只是开头不一样，例子就不给了
 
       以图生图 size= prompt=

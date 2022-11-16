@@ -55,6 +55,7 @@ set_url:https://THIS-IS-A-SAMPLE.trycloudflare.com/
          ai绘图 size=512x512 prompt={solo}, {{masterpiece}}, {{best quality}}, finely detail, meticulous painting
 
 以图生图指令
+
 和普通的差不多，只是开头不一样，例子就不给了
 
       以图生图 size= prompt=

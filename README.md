@@ -30,27 +30,26 @@ nb plugin install nonebot_plugin_zyk_novelai
 ### 用法
 #### *不愿意看的可以直接去看源码*
 
-查看当前后端URL
-
-      查看后端
-
-      查看url
-
-      查看后端url
-
-      check url
-
+查看当前配置信息
+```
+check state
+```
 
 设置后端URL
 ```
 set_url:https://THIS-IS-A-SAMPLE.trycloudflare.com/
 ```
 
+设置本地代理端口
+```
+set_port:8080
+```
+
 普通绘图指令
 
       ai绘图 | AI绘图 | ai作图 | AI作图 size= prompt=
 
-      例子：
+      例：
          ai绘图 size=512x512 prompt={solo}, {{masterpiece}}, {{best quality}}, finely detail, meticulous painting
 
 以图生图指令

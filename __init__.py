@@ -36,9 +36,13 @@ async def _():
 
 @set_port.handle()
 async def _(state: T_State):
-    global port
+    global port, proxies
     info = list(state["_matched_groups"])
     port = info[0]
+    proxies = {
+        "http://": f"http://127.0.0.1:{port}",
+        "https://": f"http://127.0.0.1:{port}"
+    }
     logger.success(f"your local proxy port:{port}")
     await set_port.finish("本地代理端口设置成功，设置将在下一次请求时启用")
 

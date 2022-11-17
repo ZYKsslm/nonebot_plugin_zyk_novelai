@@ -14,12 +14,11 @@ nb plugin install nonebot_plugin_zyk_novelai
 ### 配置后端
 1. 配置需要**科学上网**（大陆无法访问colab）和**谷歌账号**
    - 后端配置地址：[配置后端](https://colab.research.google.com/drive/1_Ma71L6uGbtt6UQyA3FjqW2lcZ5Bjck-)
-   - 请按照要求配置好后在[设置](config.py)中填写url或*使用指令发送给机器人*（推荐直接发送给机器人）
+   - 请按照要求配置好后在[设置](config.py)中填写url或*使用指令发送给机器人*
 2. 注意，url格式通常为：https://THIS-IS-A-SAMPLE.trycloudflare.com/ **末尾的斜杠“/”不能少！**
 
 ### 注意事项
-1. 如果[设置](config.py)中已填写url，那么将无法用指令让bot更改
-2. 请在[设置](config.py)中设置代理使用的的本地端口，并确保开着代理，不然可能发送不了请求 （*报EOF相关的错误*）
+1. 请在[设置](config.py)中设置代理使用的的本地端口，并确保开着代理，不然可能发送不了请求 *（报EOF相关的错误）*
 
 ### [设置](config.py)
 怕有人忘记就写一下 ~~虽然就两个变量，但比较有仪式感不是么~~

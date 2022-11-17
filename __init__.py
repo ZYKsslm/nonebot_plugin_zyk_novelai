@@ -20,7 +20,6 @@ process_img = on_regex(pattern=r"^(?P<mode>ai绘图|AI绘图|ai作图|AI作图) 
 
 port = proxy_port
 post_url = get_url + "generate-stream"
-
 # 设置一个全局变量，记录bot的状态，（同时控制bot只能同时处理一次请求）
 switch = True
 

@@ -5,7 +5,7 @@ from nonebot.typing import T_State
 from nonebot.permission import SUPERUSER
 from nonebot import on_regex, on_fullmatch, on_startswith
 from nonebot.log import logger
-from work import get_data, get_userid, get_userimg, AsyncDownloadFile
+from .work import get_data, get_userid, get_userimg, AsyncDownloadFile
 import nonebot
 from base64 import b64encode, b64decode
 from re import findall

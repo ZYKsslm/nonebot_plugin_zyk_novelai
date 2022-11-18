@@ -39,7 +39,7 @@ def get_userimg(event):
         return img_url
 
 
-async def get_data(post_url, mode, size, prompt, proxies, img):
+async def get_data(post_url, size, prompt, proxies, img=None, mode=None):
     # 低质量术士
     uc = "lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, " \
          "worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry, lowres, " \

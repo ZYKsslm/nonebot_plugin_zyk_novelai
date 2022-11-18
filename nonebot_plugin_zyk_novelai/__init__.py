@@ -6,7 +6,7 @@ from nonebot.permission import SUPERUSER
 from nonebot import on_regex, on_fullmatch, on_startswith
 from nonebot.log import logger
 from work import get_data, get_userid, get_userimg, AsyncDownloadFile
-from config import proxy_port, get_url
+import nonebot
 from base64 import b64encode, b64decode
 from re import findall
 
@@ -18,11 +18,10 @@ check_state = on_fullmatch(msg="check state", permission=SUPERUSER, priority=5, 
 process_img = on_regex(pattern=r"^(?P<mode>ai绘图|AI绘图|ai作图|AI作图) size=(?P<size>\d+x\d+) prompt=(?P<prompt>.*)",
                        permission=GROUP | PRIVATE_FRIEND, priority=10, block=True)
 
-port = proxy_port
-post_url = get_url + "generate-stream"
-# 设置一个全局变量，记录bot的状态，（同时控制bot只能同时处理一次请求）
+port = nonebot.get_driver().config.novelai_proxy_port
+post_url = str(nonebot.get_driver().config.novelai_post_url) + "generate-stream"
+# 初始化一个全局变量，记录bot的状态（控制bot只能同时处理一次请求）
 switch = True
-
 proxies = {
     "http://": f"http://127.0.0.1:{port}",
     "https://": f"http://127.0.0.1:{port}"

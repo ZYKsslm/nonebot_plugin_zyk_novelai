@@ -79,13 +79,11 @@ async def _(event: MessageEvent, state: T_State):
         await process_img.finish("图片尺寸过大，请重新输入")
 
     # 获取用户id，发送提示信息
-    id_ = get_userid(event=event)
+    id_ = get_userid(event)
     await process_img.send(Message(fr"[CQ:at,qq={id_}]正在生成图片，请稍等..."))
 
     switch = False
-    mode = None
-    img = None
-    data = await get_data(post_url, mode, size, prompt, proxies, img)
+    data = await get_data(post_url, size, prompt, proxies)
 
     if data[0] is False:
         switch = True
@@ -95,7 +93,6 @@ async def _(event: MessageEvent, state: T_State):
     # 把base64字符串转成bytes
     image = b64decode(data[1])
 
-    # 发送消息部分
     msg = Message(f"[CQ:at,qq={id_}]") + MessageSegment.image(image)
     switch = True
     await process_img.finish(msg)
@@ -127,24 +124,25 @@ async def _(event: MessageEvent):
             await img2img.finish("图片尺寸过大，请重新输入")
 
         # 获取用户id
-        id_ = get_userid(event=event)
+        id_ = get_userid(event)
         img_url = get_userimg(event)
         if img_url is None:
             switch = True
             await img2img.finish(Message(fr"[CQ:at,qq={id_}]请发送图片！"))
         # 下载用户发的图片
         switch = False
-        img_data = await AsyncDownloadFile(url=img_url, proxies=proxies)
+        await img2img.send(f"[CQ:at,qq={id_}]正在获取图片")
+        img_data = await AsyncDownloadFile(url=img_url, proxies=proxies, timeout=5)
         if img_data[0] is False:
             switch = True
             logger.error(f"用户图片获取失败:{img_data[1]}")
-            await img2img.finish(Message(fr"[CQ:at,qq={id_}]图片下载失败！"))
+            await img2img.finish(Message(fr"[CQ:at,qq={id_}]图片获取失败！"))
 
         await img2img.send(Message(fr"[CQ:at,qq={id_}]正在生成图片，请稍等..."))
         # 先把bytes转成base64，再把base64编码成字符串
         img = b64encode(img_data[1]).decode()
-        switch = False
         mode = "以图生图"
+        switch = False
         data = await get_data(post_url, mode, size, prompt, proxies, img)
 
         if data[0] is False:
@@ -154,7 +152,6 @@ async def _(event: MessageEvent):
 
         image = b64decode(data[1])
 
-        # 发送消息部分
         msg = Message(f"[CQ:at,qq={id_}]") + MessageSegment.image(image)
         switch = True
         await img2img.finish(msg)

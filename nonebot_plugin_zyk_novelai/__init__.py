@@ -130,7 +130,7 @@ async def _(event: MessageEvent):
             await img2img.finish(Message(fr"[CQ:at,qq={id_}]请发送图片！"))
         # 下载用户发的图片
         switch = False
-        await img2img.send(f"[CQ:at,qq={id_}]正在获取图片")
+        await img2img.send(Message(f"[CQ:at,qq={id_}]正在获取图片"))
         img_data = await AsyncDownloadFile(url=img_url, proxies=proxies, timeout=5)
         if img_data[0] is False:
             switch = True

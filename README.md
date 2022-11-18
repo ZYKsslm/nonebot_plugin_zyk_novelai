@@ -29,22 +29,22 @@ nb plugin install nonebot_plugin_zyk_novelai
 ### 指令
 #### *不愿意看的可以直接去看源码*
 
-- ##### 查看当前配置信息
+- #### 查看当前配置信息
 ```
 check state
 ```
 
-- ##### 设置后端URL
+- #### 设置后端URL
 ```
 set_url:https://THIS-IS-A-SAMPLE.trycloudflare.com/
 ```
 
-- ##### 设置本地代理端口
+- #### 设置本地代理端口
 ```
 set_port:10809
 ```
 
-- ##### 普通绘图指令
+- #### 普通绘图指令
 ```
 ai绘图 | AI绘图 | ai作图 | AI作图 size= prompt=
 
@@ -52,7 +52,7 @@ ai绘图 | AI绘图 | ai作图 | AI作图 size= prompt=
    ai绘图 size=512x512 prompt={solo}, {{masterpiece}}, {{best quality}}, finely detail, meticulous painting
 ```
 
-- ##### 以图生图指令
+- #### 以图生图指令
 
 除了开头和普通生图指令一样
 ```

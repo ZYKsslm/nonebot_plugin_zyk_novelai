@@ -9,6 +9,6 @@ setup(
     author_email="3119964735@qq.com",
     description="This is a simple plugin that is to send your image made by your NovelAI for nonebot2",
     url="https://github.com/ZYKsslm/nonebot_plugin_zyk_novelai",
-    license="Apache License 2.0",
+    license="MIT License",
     requires=["fake_useragent", "httpx", "nonebot2", "nonebot_adapter_onebot"],
 )

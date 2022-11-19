@@ -3,10 +3,11 @@
 ### 基于4chan魔改版NovelAILeaks(naifu)制作，白嫖的就不要什么自行车了。（基础版，功能后面会陆续加上）
 
 ### 安装方式
+#### 使用pip
 ```
 pip install nonebot_plugin_zyk_novelai
 ```
-#### 或
+#### 或使用nb-cli
 ```
 nb plugin install nonebot_plugin_zyk_novelai
 ```
@@ -15,7 +16,7 @@ nb plugin install nonebot_plugin_zyk_novelai
 1. 后端配置地址：[配置后端](https://colab.research.google.com/drive/1_Ma71L6uGbtt6UQyA3FjqW2lcZ5Bjck-)
    - 配置需要**科学上网**（大陆无法访问colab）和**谷歌账号**
 
-2. 请按照要求配置好后在**env**中填写url*或使用指令发送给机器人*
+2. 请按照要求配置好后在**env**中填写生成的url*或使用指令发送给机器人*
    - 注意，url格式通常为：https://THIS-IS-A-SAMPLE.trycloudflare.com/ **末尾的斜杠“/”不能少！**
 
 3. 请在**env**中填写代理使用的的本地端口*或使用指令发送给机器人*，并确保开着代理，不然可能发送不了请求 *（报EOF相关的错误）*

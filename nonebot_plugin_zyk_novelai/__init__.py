@@ -142,7 +142,7 @@ async def _(event: MessageEvent):
         img = b64encode(img_data[1]).decode()
         mode = "以图生图"
         switch = False
-        data = await get_data(post_url, mode, size, prompt, proxies, img)
+        data = await get_data(post_url, size, prompt, proxies, img, mode)
 
         if data[0] is False:
             switch = True

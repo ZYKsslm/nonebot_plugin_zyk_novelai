@@ -3,6 +3,7 @@ from fake_useragent import UserAgent
 import random
 from re import compile, findall
 import sqlite3
+import os
 
 
 async def AsyncDownloadFile(url, proxies=None, timeout=None, headers=None):
@@ -41,7 +42,8 @@ def get_userimg(event):
 
 
 def random_prompt(num):
-    conn = sqlite3.connect(r'resource/novelai_tags.db')
+    db_path = os.path.abspath(os.path.dirname(__file__)) + r"\resource\novelai_tags.db"
+    conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     off = random.randint(0, 39194)
     cur.execute(f"select * from  tags limit {num} offset {off}")

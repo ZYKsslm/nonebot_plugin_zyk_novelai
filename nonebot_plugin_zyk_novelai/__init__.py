@@ -15,7 +15,7 @@ from re import findall
 check_state = on_fullmatch(msg="check state", permission=SUPERUSER, priority=5, block=True)
 set_port = on_regex(pattern=r'set_port:(?P<port>\d+)', permission=SUPERUSER, priority=5, block=True)
 set_url = on_regex(pattern=r'set_url:(?P<url>.*/)', permission=SUPERUSER, priority=5, block=True)
-search_tag = on_command(cmd=("search_tags", "补魔", "搜索魔咒", "召唤魔咒"), priority=5, block=True)
+search_tag = on_command(cmd="补魔", permission=SUPERUSER, priority=5, block=True)
 img2img = on_startswith(msg=("以图生图", "img2img"), permission=GROUP | PRIVATE_FRIEND, priority=10, block=True)
 process_img = on_regex(pattern=r"^(?P<mode>ai绘图|AI绘图|ai作图|AI作图) size=(?P<size>\d+x\d+) prompt=(?P<prompt>.*)",
                        permission=GROUP | PRIVATE_FRIEND, priority=10, block=True)
@@ -61,7 +61,7 @@ async def _(state: T_State):
 @search_tag.handle()
 async def _(msg: Message = CommandArg()):
     tag = str(msg)
-    tags = search_tags(tag, proxies)
+    tags = await search_tags(tag, proxies)
 
     await search_tag.finish(f"魔咒搜索结果：{tags}")
 

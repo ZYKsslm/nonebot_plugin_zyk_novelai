@@ -41,7 +41,7 @@ def get_userimg(event):
 
 
 def random_prompt(num):
-    conn = sqlite3.connect(r'resource\novelai_tags.db')
+    conn = sqlite3.connect(r'../resource/novelai_tags.db')
     cur = conn.cursor()
     off = random.randint(0, 39194)
     cur.execute(f"select * from  tags limit {num} offset {off}")

@@ -65,11 +65,12 @@ async def search_tags(tag, proxies):
     data = {
         "keyword": tag
     }
-    with AsyncClient(headers=headers, proxies=proxies) as client:
-        res = await client.post(url="https://api.cerfai.com/search_tags", json=data).json()["data"]
+    async with AsyncClient(headers=headers, proxies=proxies) as client:
+        res = await client.post(url="https://api.cerfai.com/search_tags", json=data)
+        res = res.json()["data"]
         tags = ""
         for tag in res:
-            tags += tag["name"] + "\n"
+            tags += "\n" + tag["name"]
 
     return tags
 

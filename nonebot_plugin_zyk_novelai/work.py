@@ -2,6 +2,7 @@ from httpx import AsyncClient
 from fake_useragent import UserAgent
 import random
 from re import compile, findall
+import sqlite3
 
 
 async def AsyncDownloadFile(url, proxies=None, timeout=None, headers=None):
@@ -39,15 +40,29 @@ def get_userimg(event):
         return img_url
 
 
+def random_prompt(num):
+    conn = sqlite3.connect(r'resource\novelai_tags.db')
+    cur = conn.cursor()
+    off = random.randint(0, 39194)
+    cur.execute(f"select * from  tags limit {num} offset {off}")
+    res = cur.fetchall()
+
+    prompt = "{{{Masterpiece}}}, {{best quality}}, beautifully painted, highly detailed, highres, Stunning art"
+    for i in res:
+        prompt += ", " + i[0]
+
+    return prompt
+
+
 async def get_data(post_url, size, prompt, proxies, img=None, mode=None):
-    # 低质量术士
+    # 低质量prompt
     uc = "lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, " \
          "worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry, lowres, " \
          "bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, " \
          "low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry, bad feet"
     data = {
-        "height": size[1],
         "width": size[0],
+        "height": size[1],
         "n_samples": 1,
         "prompt": prompt,
         "sampler": "k_euler_ancestral",

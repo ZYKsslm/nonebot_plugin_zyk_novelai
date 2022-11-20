@@ -57,7 +57,7 @@ ai绘图 | AI绘图 | ai作图 | AI作图 size= prompt=
 
 除了开头和普通生图指令一样
 ```
-以图生图 size= prompt=
+以图生图 | img2img size= prompt=
 ```
 
 #### 附

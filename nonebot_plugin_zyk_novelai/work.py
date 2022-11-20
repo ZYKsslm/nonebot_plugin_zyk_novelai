@@ -56,6 +56,24 @@ def random_prompt(num):
     return prompt
 
 
+async def search_tags(tag, proxies):
+    headers = {
+        "User-Agent": UserAgent().random,
+        "origin": "http://www.cerfai.com",
+        "referer": "http://www.cerfai.com/"
+    }
+    data = {
+        "keyword": tag
+    }
+    with AsyncClient(headers=headers, proxies=proxies) as client:
+        res = await client.post(url="https://api.cerfai.com/search_tags", json=data).json()["data"]
+        tags = ""
+        for tag in res:
+            tags += tag["name"] + "\n"
+
+    return tags
+
+
 async def get_data(post_url, size, prompt, proxies, img=None, mode=None):
     # 低质量prompt
     uc = "lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, " \

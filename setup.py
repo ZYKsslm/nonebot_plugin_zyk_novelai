@@ -11,4 +11,5 @@ setup(
     url="https://github.com/ZYKsslm/nonebot_plugin_zyk_novelai",
     license="MIT License",
     requires=["fake_useragent", "httpx", "nonebot2", "nonebot_adapter_onebot"],
+    package_data={"nonebot_plugin_zyk_novelai": ["resource/*"]}
 )

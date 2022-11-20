@@ -59,3 +59,15 @@ ai绘图 | AI绘图 | ai作图 | AI作图 size= prompt=
 ```
 以图生图 size= prompt=
 ```
+
+#### 附
+
+随机prompt指令：
+
+*以图生图和普通模式都可以使用*
+```
+prompt=RandomP 条数
+
+例：
+   ai绘图 size=512x512 prompt=RandomP 10
+```

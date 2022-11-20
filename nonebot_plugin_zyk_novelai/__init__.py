@@ -5,7 +5,7 @@ from nonebot.typing import T_State
 from nonebot.permission import SUPERUSER
 from nonebot import on_regex, on_fullmatch, on_startswith
 from nonebot.log import logger
-from .work import get_data, get_userid, get_userimg, AsyncDownloadFile
+from .work import get_data, get_userid, get_userimg, AsyncDownloadFile, random_prompt
 import nonebot
 from base64 import b64encode, b64decode
 from re import findall
@@ -69,16 +69,21 @@ async def _(event: MessageEvent, state: T_State):
     # 术士
     prompt = info[2]
 
+    # 获取随机prompt
+    if "RandomP" in prompt:
+        num = findall(r'RandomP (?P<num>\d+)', prompt)[0]
+        prompt = random_prompt(num)
+
     try:
         size = size.split("x")
     except AttributeError:
         size = [512, 768]
+
     size = [int(size[0]), int(size[1])]
     if size[0] > 1024 or size[1] > 1024:
         switch = True
         await process_img.finish("图片尺寸过大，请重新输入")
 
-    # 获取用户id，发送提示信息
     id_ = get_userid(event)
     await process_img.send(Message(fr"[CQ:at,qq={id_}]正在生成图片，请稍等..."))
 
@@ -106,9 +111,7 @@ async def _(event: MessageEvent):
 
     info = str(event.get_message())
     try:
-        # 生成的图片尺寸
         size = findall(r'size=(?P<size>\d+x\d+)', info)[0]
-        # 术士
         prompt = findall(r'prompt=(?P<prompt>.*)', info)[0]
     except IndexError:
         switch = True
@@ -123,16 +126,24 @@ async def _(event: MessageEvent):
             switch = True
             await img2img.finish("图片尺寸过大，请重新输入")
 
-        # 获取用户id
+        # 获取随机prompt
+        if "RandomP" in prompt:
+            num = findall(r'RandomP (?P<num>\d+)', prompt)[0]
+            prompt = random_prompt(num)
+
         id_ = get_userid(event)
         img_url = get_userimg(event)
+
         if img_url is None:
             switch = True
             await img2img.finish(Message(fr"[CQ:at,qq={id_}]请发送图片！"))
+
         # 下载用户发的图片
         switch = False
         await img2img.send(Message(f"[CQ:at,qq={id_}]正在获取图片"))
+
         img_data = await AsyncDownloadFile(url=img_url, proxies=proxies, timeout=5)
+
         if img_data[0] is False:
             switch = True
             logger.error(f"用户图片获取失败:{img_data[1]}")

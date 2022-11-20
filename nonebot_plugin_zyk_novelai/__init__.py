@@ -3,24 +3,25 @@
 from nonebot.adapters.onebot.v11 import MessageEvent, Message, MessageSegment, GROUP, PRIVATE_FRIEND
 from nonebot.typing import T_State
 from nonebot.permission import SUPERUSER
-from nonebot import on_regex, on_fullmatch, on_startswith
+from nonebot import on_regex, on_fullmatch, on_startswith, get_driver, on_command
+from nonebot.params import CommandArg
 from nonebot.log import logger
-from .work import get_data, get_userid, get_userimg, AsyncDownloadFile, random_prompt
-import nonebot
+from .work import get_data, get_userid, get_userimg, AsyncDownloadFile, random_prompt, search_tags
 from base64 import b64encode, b64decode
 from re import findall
 
 
 # 构造响应器
+check_state = on_fullmatch(msg="check state", permission=SUPERUSER, priority=5, block=True)
 set_port = on_regex(pattern=r'set_port:(?P<port>\d+)', permission=SUPERUSER, priority=5, block=True)
 set_url = on_regex(pattern=r'set_url:(?P<url>.*/)', permission=SUPERUSER, priority=5, block=True)
+search_tag = on_command(cmd=("search_tags", "补魔", "搜索魔咒", "召唤魔咒"), priority=5, block=True)
 img2img = on_startswith(msg=("以图生图", "img2img"), permission=GROUP | PRIVATE_FRIEND, priority=10, block=True)
-check_state = on_fullmatch(msg="check state", permission=SUPERUSER, priority=5, block=True)
 process_img = on_regex(pattern=r"^(?P<mode>ai绘图|AI绘图|ai作图|AI作图) size=(?P<size>\d+x\d+) prompt=(?P<prompt>.*)",
                        permission=GROUP | PRIVATE_FRIEND, priority=10, block=True)
 
-port = nonebot.get_driver().config.novelai_proxy_port
-post_url = str(nonebot.get_driver().config.novelai_post_url) + "generate-stream"
+port = get_driver().config.novelai_proxy_port
+post_url = str(get_driver().config.novelai_post_url) + "generate-stream"
 # 初始化一个全局变量，记录bot的状态（控制bot只能同时处理一次请求）
 switch = True
 proxies = {
@@ -55,6 +56,14 @@ async def _(state: T_State):
     post_url = url + "generate-stream"
     logger.success(f"your post url:{post_url}")
     await set_url.finish(f"url设置成功，设置将在下一次请求时启用")
+
+
+@search_tag.handle()
+async def _(msg: Message = CommandArg()):
+    tag = str(msg)
+    tags = search_tags(tag, proxies)
+
+    await search_tag.finish(f"魔咒搜索结果：{tags}")
 
 
 @process_img.handle()

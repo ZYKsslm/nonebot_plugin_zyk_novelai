@@ -71,3 +71,11 @@ prompt=RandomP 条数
 例：
    ai绘图 size=512x512 prompt=RandomP 10
 ```
+
+- #### 搜索魔咒
+```
+(COMMAND_START)补魔 中文名
+
+例：
+   /补魔 黑丝
+```

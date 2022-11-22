@@ -1,6 +1,6 @@
 # :memo: nonebot_plugin_zyk_novelai
 
-### 基于4chan魔改版NovelAILeaks(naifu)制作，白嫖的就不要什么自行车了。（基础版，功能后面会陆续加上）
+### 基于4chan魔改版NovelAILeaks(naifu)制作（基础版，功能后面会陆续加上）
 
 ### 安装方式
 #### 使用pip
@@ -11,8 +11,10 @@ pip install nonebot_plugin_zyk_novelai
 ```
 nb plugin install nonebot_plugin_zyk_novelai
 ```
+:ambulance: :beer:
+>**因为我PYPI版本提交的问题，所以安装过老版本的需要删除后重新下一遍，不然无法安装最新版**
 
-### 配置后端
+### :rocket: 配置后端
 1. 后端配置地址：[配置后端](https://colab.research.google.com/drive/1_Ma71L6uGbtt6UQyA3FjqW2lcZ5Bjck-)
    - 配置需要**科学上网**（大陆无法访问colab）和**谷歌账号**
 
@@ -23,11 +25,12 @@ nb plugin install nonebot_plugin_zyk_novelai
 
 ### :wrench: env配置
 
-|               novelai_post_url                | novelai_proxy_port |
-|:---------------------------------------------:|:------------------:|
-| `https://THIS-IS-A-SAMPLE.trycloudflare.com/` |       10809        |
+|        name        |                    example                    | type |   usage   |
+|:------------------:|:---------------------------------------------:|:----:|:---------:|
+|  novelai_post_url  | `https://THIS-IS-A-SAMPLE.trycloudflare.com/` | str  |   后端URL   |
+| novelai_proxy_port |                     10809                     | int  |  本地代理端口   |
 
-### 指令
+### :label: 指令
 #### :clown_face: *不愿意看的可以直接去看源码*
 
 - #### 查看当前配置信息
@@ -71,11 +74,12 @@ ai绘图 | AI绘图 | ai作图 | AI作图 size= prompt=
 >例：
 >   ai绘图 size=512x512 prompt=RandomP 10
 >```
+>提一句，由于数据库里的tag太水了，所以随机的prompt要做好心理准备......
 
 - #### 搜索魔咒
 ```
 (COMMAND_START)补魔 中文名
 
 例：
-   /补魔 黑丝
+   /补魔 黑色长发
 ```

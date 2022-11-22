@@ -66,11 +66,14 @@ async def search_tags(tag, proxies):
         "keyword": tag
     }
     async with AsyncClient(headers=headers, proxies=proxies) as client:
-        res = await client.post(url="https://api.cerfai.com/search_tags", json=data)
+        try:
+            res = await client.post(url="https://api.cerfai.com/search_tags", json=data)
+        except Exception as error:
+            return False, error
         res = res.json()["data"]
         tags = ""
         for tag in res:
-            tags += f"\n词条名：{tag['name']} 中文译名：{tag['t_name']} 描述：{tag['desc']}"
+            tags += f"\n{tag['name']} {tag['t_name']}"
 
     return tags
 

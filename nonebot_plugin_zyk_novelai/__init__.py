@@ -63,7 +63,10 @@ async def _(msg: Message = CommandArg()):
     tag = str(msg)
     tags = await search_tags(tag, proxies)
 
-    await search_tag.finish(f"魔咒搜索结果：{tags}")
+    if tags[0] is False:
+        await search_tag.finish("魔咒搜索失败")
+
+    await search_tag.finish(f"魔咒搜索结果：{tags[1]}")
 
 
 @process_img.handle()

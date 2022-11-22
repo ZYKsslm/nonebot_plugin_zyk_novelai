@@ -75,7 +75,7 @@ async def search_tags(tag, proxies):
         for tag in res:
             tags += f"\n{tag['name']} {tag['t_name']}"
 
-    return tags
+    return True, tags
 
 
 async def get_data(post_url, size, prompt, proxies, img=None, mode=None):

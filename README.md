@@ -45,7 +45,7 @@ set_url:https://THIS-IS-A-SAMPLE.trycloudflare.com/
 set_port:10809
 ```
 
-- #### 普通绘图指令
+- #### 普通绘图
 ```
 ai绘图 | AI绘图 | ai作图 | AI作图 size= prompt=
 
@@ -53,7 +53,7 @@ ai绘图 | AI绘图 | ai作图 | AI作图 size= prompt=
    ai绘图 size=512x512 prompt={solo}, {{masterpiece}}, {{best quality}}, finely detail, meticulous painting
 ```
 
-- #### 以图生图指令
+- #### 以图生图
 
 除了开头和普通生图指令一样
 ```
@@ -62,7 +62,7 @@ ai绘图 | AI绘图 | ai作图 | AI作图 size= prompt=
 
 #### 附
 
-随机prompt指令：
+随机prompt指令
 
 *以图生图和普通模式都可以使用*
 ```

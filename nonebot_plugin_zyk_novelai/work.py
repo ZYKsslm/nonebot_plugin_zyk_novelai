@@ -70,7 +70,7 @@ async def search_tags(tag, proxies):
         res = res.json()["data"]
         tags = ""
         for tag in res:
-            tags += "\n" + tag["name"]
+            tags += f"\n词条名：{tag['name']} 中文译名：{tag['t_name']} 描述：{tag['desc']}"
 
     return tags
 

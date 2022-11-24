@@ -42,6 +42,7 @@ def get_userimg(event):
 
 
 def random_prompt(num):
+    num = int(num)
     db_path = os.path.abspath(os.path.dirname(__file__)) + r"\resource\novelai_tags.db"
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()

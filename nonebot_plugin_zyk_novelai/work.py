@@ -45,13 +45,13 @@ def random_prompt(num):
     db_path = os.path.abspath(os.path.dirname(__file__)) + r"\resource\novelai_tags.db"
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    off = random.randint(0, 39194)
+    off = random.randint(0, 1000)
     cur.execute(f"select * from  tags limit {num} offset {off}")
-    res = cur.fetchall()
+    tags = cur.fetchall()
 
     prompt = "{{{Masterpiece}}}, {{best quality}}, beautifully painted, highly detailed, highres, Stunning art"
-    for i in res:
-        prompt += ", " + i[0]
+    for tag in tags:
+        prompt += ", " + tag[0]
 
     return prompt
 

@@ -47,7 +47,7 @@ def random_prompt(num):
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     off = random.randint(0, 1000-num)
-    cur.execute(f"select * from  main_tags limit {num} offset {off}")
+    cur.execute(f"select 英文词条 from  main_tags limit {num} offset {off}")
     tags = cur.fetchall()
 
     prompt = "{{{Masterpiece}}}, {{best quality}}, beautifully painted, highly detailed, highres, Stunning art"

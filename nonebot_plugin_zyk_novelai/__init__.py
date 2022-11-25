@@ -35,7 +35,7 @@ init(autoreset=True)
 
 @check_state.handle()
 async def _():
-    logger.info(Fore.LIGHTBLUE_EX + f"当前后端url为：{post_url}，本地代理端口号为：{port}")
+    logger.info(Fore.LIGHTCYAN_EX + f"当前后端url为：{post_url}，本地代理端口号为：{port}")
 
 
 @set_port.handle()
@@ -51,7 +51,7 @@ async def _(state: T_State):
             "http://": f"http://127.0.0.1:{port}",
             "https://": f"http://127.0.0.1:{port}"
         }
-    logger.success(Fore.LIGHTGREEN_EX + f"your local proxy port:{port}")
+    logger.success(Fore.LIGHTCYAN_EX + f"your local proxy port:{port}")
     await set_port.finish("本地代理端口设置成功，设置将在下一次请求时启用")
 
 
@@ -61,7 +61,7 @@ async def _(state: T_State):
     info = list(state["_matched_groups"])
     url = info[0]
     post_url = url + "generate-stream"
-    logger.success(Fore.LIGHTGREEN_EX + f"your post url:{post_url}")
+    logger.success(Fore.LIGHTCYAN_EX + f"your post url:{post_url}")
     await set_url.finish(f"url设置成功，设置将在下一次请求时启用")
 
 

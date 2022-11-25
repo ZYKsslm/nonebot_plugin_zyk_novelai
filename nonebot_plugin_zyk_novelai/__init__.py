@@ -1,6 +1,6 @@
 #!usr/bin/env python3
 # -*- coding: utf-8 -*-
-from nonebot.adapters.onebot.v11 import MessageEvent, Message, MessageSegment, GROUP, PRIVATE_FRIEND
+from nonebot.adapters.onebot.v11 import MessageEvent, Message, MessageSegment, GROUP, PRIVATE_FRIEND, Bot
 from nonebot.typing import T_State
 from nonebot.permission import SUPERUSER
 from nonebot import on_regex, on_fullmatch, on_startswith, get_driver, on_command
@@ -128,7 +128,7 @@ async def _(event: MessageEvent, state: T_State):
 
 
 @img2img.handle()
-async def _(event: MessageEvent):
+async def _(event: MessageEvent, bot: Bot):
     global switch
 
     if switch is False:
@@ -174,7 +174,9 @@ async def _(event: MessageEvent):
         switch = False
 
         await img2img.send(Message(f"[CQ:at,qq={id_}]正在获取图片"))
-        logger.info(Fore.LIGHTYELLOW_EX + f"开始获取用户{id_}发送的图片")
+        # 获取用户昵称
+        name = (await bot.get_stranger_info(user_id=int(id_)))["nickname"]
+        logger.info(Fore.LIGHTYELLOW_EX + f"开始获取{name}发送的图片")
 
         img_data = await AsyncDownloadFile(url=img_url, proxies=proxies, timeout=5)
 

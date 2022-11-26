@@ -25,13 +25,13 @@ nb plugin install nonebot_plugin_zyk_novelai
 
 ## :wrench: env配置
 
-|        name        |                    example                    | type |   usage   |
-|:------------------:|:---------------------------------------------:|:----:|:---------:|
-|  novelai_post_url  | `https://THIS-IS-A-SAMPLE.trycloudflare.com/` | str  |   后端URL   |
-| novelai_proxy_port |                     10809                     | int  |  本地代理端口   |
+|        Name        |                    Example                    | Type |  Usage   |
+|:------------------:|:---------------------------------------------:|:----:|:--------:|
+|  novelai_post_url  | `https://THIS-IS-A-SAMPLE.trycloudflare.com/` | str  |  后端URL   |
+| novelai_proxy_port |                     10809                     | int  |  本地代理端口  |
 
 ## :label: 指令
-#### :clown_face: *不愿意看的可以直接去看源码*
+##### :clown_face: *不愿意看的可以直接去看源码*
 
 - #### 查看当前配置信息
 ```
@@ -94,11 +94,11 @@ ai绘图 | AI绘图 | ai作图 | AI作图 size= prompt=
 ## :egg: 补充
 >什么是本地代理端口？
 
-可能有人不明白什么是本地代理端口（也有可能是我的措辞问题），这里提一下。
+可能有人不明白什么是本地代理端口（也有可能是我的措辞问题），这里提一下
 
-本地代理端口指的就是你的**代理软件**所使用（系统）端口
+本地代理端口指的就是你的**代理软件**所使用的（系统）端口
 
-不知道怎么看的可以看这里 *（以Windows 10 为例）*
+不知道本地代理端口在哪里的可以看这里 *（以Windows 10 为例）*
 
 ![查看本地代理端口](port.png)
 

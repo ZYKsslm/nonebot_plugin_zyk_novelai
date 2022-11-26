@@ -48,7 +48,7 @@ async def _(state: T_State):
     try:
         int(port)
     except ValueError:
-        if port is not None:
+        if port != "None":
             await set_port.finish("请输入有效参数！")
 
     if port == "None":

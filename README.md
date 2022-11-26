@@ -85,8 +85,8 @@ ai绘图 | AI绘图 | ai作图 | AI作图 size= prompt=
 
 - #### 搜索魔咒
 ```
-(COMMAND_START)补魔 中文名
+(COMMAND_START)补魔 | 召唤魔咒 | 搜索魔咒 中文名
 
 例：
-   /补魔 黑色长发
+   /补魔 黑发
 ```

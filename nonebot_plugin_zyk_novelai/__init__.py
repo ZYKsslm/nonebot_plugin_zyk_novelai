@@ -15,7 +15,7 @@ from colorama import init, Fore
 check_state = on_fullmatch(msg="check state", permission=SUPERUSER, priority=5, block=True)
 set_port = on_regex(pattern=r'set_port:(?P<port>.*?)', permission=SUPERUSER, priority=5, block=True)
 set_url = on_regex(pattern=r'set_url:(?P<url>.*/)', permission=SUPERUSER, priority=5, block=True)
-search_tag = on_command(cmd="补魔", permission=SUPERUSER, priority=5, block=True)
+search_tag = on_command(cmd="补魔", aliases={"召唤魔咒", "搜索魔咒"}, permission=SUPERUSER, priority=5, block=True)
 img2img = on_startswith(msg=("以图生图", "img2img"), permission=GROUP | PRIVATE_FRIEND, priority=10, block=True)
 process_img = on_regex(pattern=r"^(?P<mode>ai绘图|AI绘图|ai作图|AI作图) size=(?P<size>\d+x\d+) prompt=(?P<prompt>.*)",
                        permission=GROUP | PRIVATE_FRIEND, priority=10, block=True)

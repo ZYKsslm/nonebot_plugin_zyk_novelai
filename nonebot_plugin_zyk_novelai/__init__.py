@@ -13,7 +13,7 @@ from colorama import init, Fore
 
 # 构造响应器
 check_state = on_fullmatch(msg="check state", permission=SUPERUSER, priority=5, block=True)
-set_port = on_regex(pattern=r'set_port:(?P<port>\d+)', permission=SUPERUSER, priority=5, block=True)
+set_port = on_regex(pattern=r'set_port:(?P<port>.*?)', permission=SUPERUSER, priority=5, block=True)
 set_url = on_regex(pattern=r'set_url:(?P<url>.*/)', permission=SUPERUSER, priority=5, block=True)
 search_tag = on_command(cmd="补魔", permission=SUPERUSER, priority=5, block=True)
 img2img = on_startswith(msg=("以图生图", "img2img"), permission=GROUP | PRIVATE_FRIEND, priority=10, block=True)
@@ -35,7 +35,7 @@ init(autoreset=True)
 
 @check_state.handle()
 async def _():
-    logger.info(Fore.LIGHTCYAN_EX + f"当前后端url为：{post_url}，本地代理端口号为：{port}")
+    logger.info(Fore.LIGHTCYAN_EX + f"当前后端URL为：{post_url}，本地代理端口号为：{port}")
 
 
 @set_port.handle()
@@ -44,14 +44,23 @@ async def _(state: T_State):
     info = list(state["_matched_groups"])
     port = info[0]
 
-    if port is None:
+    # 判断是否为数字
+    try:
+        int(port)
+    except ValueError:
+        if port is not None:
+            await set_port.finish("请输入有效参数！")
+
+    if port == "None":
         proxies = None
+        logger.success(Fore.LIGHTCYAN_EX + f"成功取消代理模式")
     else:
         proxies = {
             "http://": f"http://127.0.0.1:{port}",
             "https://": f"http://127.0.0.1:{port}"
         }
-    logger.success(Fore.LIGHTCYAN_EX + f"your local proxy port:{port}")
+        logger.success(Fore.LIGHTCYAN_EX + f"你的本地代理端口：{port}")
+
     await set_port.finish("本地代理端口设置成功，设置将在下一次请求时启用")
 
 
@@ -61,7 +70,7 @@ async def _(state: T_State):
     info = list(state["_matched_groups"])
     url = info[0]
     post_url = url + "generate-stream"
-    logger.success(Fore.LIGHTCYAN_EX + f"your post url:{post_url}")
+    logger.success(Fore.LIGHTCYAN_EX + f"你的后端URL：{post_url}")
     await set_url.finish(f"url设置成功，设置将在下一次请求时启用")
 
 
@@ -77,7 +86,7 @@ async def _(msg: Message = CommandArg()):
 
 
 @process_img.handle()
-async def _(event: MessageEvent, state: T_State):
+async def _(event: MessageEvent, state: T_State, bot: Bot):
     global switch
     if switch is False:
         await process_img.finish("资源占用中！")
@@ -106,19 +115,21 @@ async def _(event: MessageEvent, state: T_State):
         switch = True
         await process_img.finish("图片尺寸过大，请重新输入！")
 
+    # 获取用户信息
     id_ = get_userid(event)
+    name = (await bot.get_stranger_info(user_id=int(id_)))["nickname"]
 
     await process_img.send(Message(fr"[CQ:at,qq={id_}]正在生成图片，请稍等..."))
-    logger.info(Fore.LIGHTYELLOW_EX + f"开始生成图片：\nsize={size}\nprompt={prompt}")
+    logger.info(Fore.LIGHTYELLOW_EX + f"\n开始生成{name}的图片：\nsize={size[0]}，{size[1]}\nprompt={prompt}")
     switch = False
     data = await get_data(post_url, size, prompt, proxies)
 
     if data[0] is False:
         switch = True
         logger.error(Fore.LIGHTRED_EX + f"后端请求失败:{data[1]}")
-        await process_img.finish(f"生成失败")
+        await process_img.finish(f"{name}的图片生成失败")
 
-    logger.success(Fore.LIGHTGREEN_EX + "生成成功")
+    logger.success(Fore.LIGHTGREEN_EX + "{name}的图片生成成功")
 
     # 把base64字符串转成bytes
     image = b64decode(data[1])
@@ -182,10 +193,10 @@ async def _(event: MessageEvent, bot: Bot):
 
         if img_data[0] is False:
             switch = True
-            logger.error(Fore.LIGHTRED_EX + f"用户图片获取失败:{img_data[1]}")
+            logger.error(Fore.LIGHTRED_EX + f"{name}发送的图片获取失败:{img_data[1]}")
             await img2img.finish(Message(fr"[CQ:at,qq={id_}]图片获取失败！"))
 
-        logger.success(Fore.LIGHTGREEN_EX + "图片获取成功")
+        logger.success(Fore.LIGHTGREEN_EX + f"{name}发送的图片获取成功")
 
         await img2img.send(Message(fr"[CQ:at,qq={id_}]正在生成图片，请稍等..."))
 
@@ -193,8 +204,7 @@ async def _(event: MessageEvent, bot: Bot):
         img = b64encode(img_data[1]).decode()
         mode = "以图生图"
         switch = False
-        logger.info(Fore.LIGHTYELLOW_EX + f"开始生成图片：\nsize={size}\nprompt={prompt}")
-
+        logger.info(Fore.LIGHTYELLOW_EX + f"\n开始生成{name}的图片：\nsize={size[0]}，{size[1]}\nprompt={prompt}")
         data = await get_data(post_url, size, prompt, proxies, img, mode)
 
         if data[0] is False:
@@ -202,7 +212,7 @@ async def _(event: MessageEvent, bot: Bot):
             logger.error(Fore.LIGHTRED_EX + f"后端请求失败:{data[1]}")
             await img2img.finish(f"生成失败")
 
-        logger.success(Fore.LIGHTGREEN_EX + "生成成功")
+        logger.success(Fore.LIGHTGREEN_EX + "图片生成成功")
 
         image = b64decode(data[1])
         msg = Message(f"[CQ:at,qq={id_}]") + MessageSegment.image(image)

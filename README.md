@@ -48,6 +48,13 @@ set_url:https://THIS-IS-A-SAMPLE.trycloudflare.com/
 set_port:10809
 ```
 
+>#### 附
+> 无代理模式
+> ```
+> set_port:None
+> ```
+> **注意，None开头为大写**
+
 - #### 普通绘图
 ```
 ai绘图 | AI绘图 | ai作图 | AI作图 size= prompt=

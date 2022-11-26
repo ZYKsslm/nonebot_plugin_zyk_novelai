@@ -129,7 +129,7 @@ async def _(event: MessageEvent, state: T_State, bot: Bot):
         logger.error(Fore.LIGHTRED_EX + f"后端请求失败:{data[1]}")
         await process_img.finish(f"{name}的图片生成失败")
 
-    logger.success(Fore.LIGHTGREEN_EX + "{name}的图片生成成功")
+    logger.success(Fore.LIGHTGREEN_EX + f"{name}的图片生成成功")
 
     # 把base64字符串转成bytes
     image = b64decode(data[1])
@@ -212,7 +212,7 @@ async def _(event: MessageEvent, bot: Bot):
             logger.error(Fore.LIGHTRED_EX + f"后端请求失败:{data[1]}")
             await img2img.finish(f"生成失败")
 
-        logger.success(Fore.LIGHTGREEN_EX + "图片生成成功")
+        logger.success(Fore.LIGHTGREEN_EX + f"{name}的图片生成成功")
 
         image = b64decode(data[1])
         msg = Message(f"[CQ:at,qq={id_}]") + MessageSegment.image(image)

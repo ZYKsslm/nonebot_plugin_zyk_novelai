@@ -8,7 +8,7 @@ from nonebot.log import logger
 
 from .work import get_data, get_userid, get_userimg, AsyncDownloadFile, random_prompt, search_tags
 from base64 import b64encode, b64decode
-from re import search
+from re import findall
 from colorama import init, Fore
 
 # 构造响应器
@@ -106,8 +106,8 @@ async def _(event: MessageEvent, bot: Bot, regex=RegexGroup()):
     # 获取随机prompt
     if "RandomP" in prompt:
         try:
-            num = search(r'RandomP (?P<num>\d+)', prompt)[1]
-        except TypeError:
+            num = findall(r'RandomP (?P<num>\d+)', prompt)[0]
+        except IndexError:
             switch = True
             await process_img.finish("请输入条数！")
         else:
@@ -155,18 +155,18 @@ async def _(event: MessageEvent, bot: Bot):
     info = str(event.get_message())
     try:
         # 获取图片尺寸
-        size = search(r'size=(?P<size>\d+x\d+)', info)[1]
+        size = findall(r'size=(?P<size>\d+x\d+)', info)[0]
         # 获取prompt
-        prompt = search(r'prompt=(?P<prompt>.*)', info)[1]
-    except TypeError:
+        prompt = findall(r'prompt=(?P<prompt>.*)', info)[0]
+    except IndexError:
         switch = True
         await img2img.finish("缺少参数！")
     else:
 
         try:
             # 获取strength
-            strength = search(r'strength=(?P<strength>.*)', info)[1]
-        except TypeError:
+            strength = findall(r'strength=(?P<strength>.*)', info)[0]
+        except IndexError:
             strength = 0.7
         else:
             try:
@@ -180,8 +180,8 @@ async def _(event: MessageEvent, bot: Bot):
 
         try:
             # 获取noise
-            noise = search(r'noise=(?P<noise>.*)', info)[1]
-        except TypeError:
+            noise = findall(r'noise=(?P<noise>.*)', info)[0]
+        except IndexError:
             noise = 0.2
         else:
             try:
@@ -206,8 +206,8 @@ async def _(event: MessageEvent, bot: Bot):
         # 获取随机prompt
         if "RandomP" in prompt:
             try:
-                num = search(r'RandomP (?P<num>\d+)', prompt)[1]
-            except TypeError:
+                num = findall(r'RandomP (?P<num>\d+)', prompt)[0]
+            except IndexError:
                 switch = True
                 await process_img.finish("请输入条数！")
             else:

@@ -8,7 +8,7 @@ from nonebot.log import logger
 
 from .work import get_data, get_userid, get_userimg, AsyncDownloadFile, random_prompt, search_tags
 from base64 import b64encode, b64decode
-from re import findall
+from re import search
 from colorama import init, Fore
 
 # 构造响应器
@@ -104,8 +104,8 @@ async def _(event: MessageEvent, bot: Bot, regex=RegexGroup()):
     # 获取随机prompt
     if "RandomP" in prompt:
         try:
-            num = findall(r'RandomP (?P<num>\d+)', prompt)[0]
-        except IndexError:
+            num = search(r'RandomP (?P<num>\d+)', prompt)[1]
+        except TypeError:
             switch = True
             await process_img.finish("请输入条数！")
         else:
@@ -153,13 +153,44 @@ async def _(event: MessageEvent, bot: Bot):
     info = str(event.get_message())
     try:
         # 获取图片尺寸
-        size = findall(r'size=(?P<size>\d+x\d+)', info)[0]
+        size = search(r'size=(?P<size>\d+x\d+)', info)[1]
         # 获取prompt
-        prompt = findall(r'prompt=(?P<prompt>.*)', info)[0]
-    except IndexError:
+        prompt = search(r'prompt=(?P<prompt>.*)', info)[1]
+    except TypeError:
         switch = True
         await img2img.finish("缺少参数！")
     else:
+
+        try:
+            # 获取strength
+            strength = search(r'strength=(?P<strength>.*)', info)[1]
+        except TypeError:
+            strength = 0.7
+        else:
+            try:
+                fs = float(strength)
+            except ValueError:
+                await img2img.finish("请输入正确的strength！")
+            else:
+                strength = fs
+            if strength > 0.99:
+                await img2img.finish("strength过大！（不能超过0.99）")
+
+        try:
+            # 获取noise
+            noise = search(r'noise=(?P<noise>.*)', info)[1]
+        except TypeError:
+            noise = 0.2
+        else:
+            try:
+                fn = float(noise)
+            except ValueError:
+                await img2img.finish("请输入正确的noise！")
+            else:
+                noise = fn
+            if noise > 0.99:
+                await img2img.finish("noise过大！（不能超过0.99）")
+
         # 处理图片尺寸
         try:
             size = size.split("x")
@@ -173,8 +204,8 @@ async def _(event: MessageEvent, bot: Bot):
         # 获取随机prompt
         if "RandomP" in prompt:
             try:
-                num = findall(r'RandomP (?P<num>\d+)', prompt)[0]
-            except IndexError:
+                num = search(r'RandomP (?P<num>\d+)', prompt)[1]
+            except TypeError:
                 switch = True
                 await process_img.finish("请输入条数！")
             else:
@@ -210,7 +241,7 @@ async def _(event: MessageEvent, bot: Bot):
         mode = "以图生图"
         switch = False
         logger.info(Fore.LIGHTYELLOW_EX + f"\n开始生成{name}的图片：\nsize={size[0]}，{size[1]}\nprompt={prompt}")
-        data = await get_data(post_url, size, prompt, proxies, img, mode)
+        data = await get_data(post_url=post_url, size=size, prompt=prompt, proxies=proxies, img=img, mode=mode, strength=strength, noise=noise)
 
         if data[0] is False:
             switch = True

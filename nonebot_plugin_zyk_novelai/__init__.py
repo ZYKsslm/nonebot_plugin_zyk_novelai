@@ -53,17 +53,18 @@ async def _(regex: tuple = RegexGroup()):
         # 取消代理模式
         if port == "None":
             proxies = None
-            logger.success(Fore.LIGHTCYAN_EX + f"成功取消代理模式")
+            logger.success(Fore.LIGHTCYAN_EX + "成功取消代理模式")
+            await set_port.finish("成功取消代理模式")
         else:
             await set_port.finish("请输入有效参数！")
-    else:
-        proxies = {
-            "http://": f"http://127.0.0.1:{port}",
-            "https://": f"http://127.0.0.1:{port}"
-        }
-        logger.success(Fore.LIGHTCYAN_EX + f"当前本地代理端口：{port}")
 
-        await set_port.finish("本地代理端口设置成功，设置将在下一次请求时启用")
+    proxies = {
+        "http://": f"http://127.0.0.1:{port}",
+        "https://": f"http://127.0.0.1:{port}"
+    }
+    logger.success(Fore.LIGHTCYAN_EX + f"当前本地代理端口：{port}")
+
+    await set_port.finish("本地代理端口设置成功，设置将在下一次请求时启用")
 
 
 # 设置后端URL

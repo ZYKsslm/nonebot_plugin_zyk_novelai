@@ -1,7 +1,7 @@
 from httpx import AsyncClient
 from fake_useragent import UserAgent
 import random
-from re import compile, search
+from re import compile, findall
 import sqlite3
 import os
 
@@ -21,8 +21,8 @@ async def AsyncDownloadFile(url, proxies=None, timeout=None, headers=None):
 def get_userid(event):
     info = str(event.get_session_id())
     try:
-        res = search(r"group_(?P<group_id>\d+)_(?P<member_id>\d+)", info)[1]
-    except TypeError:
+        res = findall(r"group_(?P<group_id>\d+)_(?P<member_id>\d+)", info)[0]
+    except IndexError:
         id_ = info
     else:
         id_ = res[1]
@@ -34,8 +34,8 @@ def get_userimg(event):
     img_info = str(event.get_message())
     url_pattern = compile(r'url=(?P<url>.*?)]')
     try:
-        img_url = search(url_pattern, img_info)[1]
-    except TypeError:
+        img_url = findall(url_pattern, img_info)[0]
+    except IndexError:
         return None
     else:
         return img_url
@@ -116,9 +116,9 @@ async def get_data(post_url, size, prompt, proxies, img=None, mode=None, strengt
 
         # 获取错误原因
         if "error" in info:
-            error = search(r'"error":"(?P<error>.*?)"', info)[1]
+            error = findall(r'"error":"(?P<error>.*?)"', info)[0]
             return False, error
 
         # 获取返回的图片base64
-        base64_img = search(r'data:(?P<base64>.*)', info)[1]
+        base64_img = findall(r'data:(?P<base64>.*)', info)[0]
         return True, base64_img

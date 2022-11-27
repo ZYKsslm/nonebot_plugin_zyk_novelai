@@ -37,6 +37,7 @@ init(autoreset=True)
 # 查看后端状态信息
 @check_state.handle()
 async def _():
+    await check_state.send(f"当前后端URL为：{post_url}，本地代理端口号为：{port}")
     logger.info(Fore.LIGHTCYAN_EX + f"当前后端URL为：{post_url}，本地代理端口号为：{port}")
 
 
@@ -165,7 +166,7 @@ async def _(event: MessageEvent, bot: Bot):
 
         try:
             # 获取strength
-            strength = findall(r'strength=(?P<strength>.*)', info)[0]
+            strength = findall(r'strength=(?P<strength>\d\.\d)', info)[0]
         except IndexError:
             strength = 0.7
         else:
@@ -180,7 +181,7 @@ async def _(event: MessageEvent, bot: Bot):
 
         try:
             # 获取noise
-            noise = findall(r'noise=(?P<noise>.*)', info)[0]
+            noise = findall(r'noise=(?P<noise>\d\.\d)', info)[0]
         except IndexError:
             noise = 0.2
         else:
@@ -242,7 +243,8 @@ async def _(event: MessageEvent, bot: Bot):
         img = b64encode(img_data[1]).decode("utf-8")
         mode = "以图生图"
         switch = False
-        logger.info(Fore.LIGHTYELLOW_EX + f"\n开始生成{name}的图片：\nsize={size[0]}，{size[1]}\nprompt={prompt}")
+        logger.info(Fore.LIGHTYELLOW_EX +
+                    f"\n开始生成{name}的图片：\nsize={size[0]},{size[1]}\nstrength={strength}\nnoise={noise}\nprompt={prompt}")
         data = await get_data(post_url=post_url, size=size, prompt=prompt, proxies=proxies, img=img, mode=mode,
                               strength=strength, noise=noise)
 

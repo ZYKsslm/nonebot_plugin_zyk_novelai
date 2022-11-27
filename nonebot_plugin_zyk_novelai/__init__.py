@@ -44,27 +44,29 @@ async def _():
 @set_port.handle()
 async def _(regex: tuple = RegexGroup()):
     global port, proxies
-    port = regex[0]
+    pt = regex[0]
 
     # 判断是否为数字
     try:
-        int(port)
+        int(pt)
     except ValueError:
         # 取消代理模式
-        if port == "None":
+        if pt == "None":
+            port = pt
             proxies = None
             logger.success(Fore.LIGHTCYAN_EX + "成功取消代理模式")
             await set_port.finish("成功取消代理模式")
         else:
             await set_port.finish("请输入有效参数！")
+    else:
+        port = pt
+        proxies = {
+            "http://": f"http://127.0.0.1:{port}",
+            "https://": f"http://127.0.0.1:{port}"
+        }
+        logger.success(Fore.LIGHTCYAN_EX + f"当前本地代理端口：{port}")
 
-    proxies = {
-        "http://": f"http://127.0.0.1:{port}",
-        "https://": f"http://127.0.0.1:{port}"
-    }
-    logger.success(Fore.LIGHTCYAN_EX + f"当前本地代理端口：{port}")
-
-    await set_port.finish("本地代理端口设置成功，设置将在下一次请求时启用")
+        await set_port.finish("本地代理端口设置成功，设置将在下一次请求时启用")
 
 
 # 设置后端URL

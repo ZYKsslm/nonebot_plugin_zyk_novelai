@@ -1,11 +1,11 @@
 #!usr/bin/env python3
 # -*- coding: utf-8 -*-
 from nonebot.adapters.onebot.v11 import MessageEvent, Message, MessageSegment, GROUP, PRIVATE_FRIEND, Bot
-from nonebot.typing import T_State
-from nonebot.permission import SUPERUSER
 from nonebot import on_regex, on_fullmatch, on_startswith, get_driver, on_command
-from nonebot.params import CommandArg
+from nonebot.params import CommandArg, RegexGroup
+from nonebot.permission import SUPERUSER
 from nonebot.log import logger
+
 from .work import get_data, get_userid, get_userimg, AsyncDownloadFile, random_prompt, search_tags
 from base64 import b64encode, b64decode
 from re import findall
@@ -20,29 +20,31 @@ img2img = on_startswith(msg=("以图生图", "img2img"), permission=GROUP | PRIV
 process_img = on_regex(pattern=r"^(?P<mode>ai绘图|AI绘图|ai作图|AI作图) size=(?P<size>\d+x\d+) prompt=(?P<prompt>.*)",
                        permission=GROUP | PRIVATE_FRIEND, priority=10, block=True)
 
+# 从env中获取本地端口号和后端URL
 port = get_driver().config.novelai_proxy_port
 post_url = str(get_driver().config.novelai_post_url) + "generate-stream"
-# 初始化一个全局变量，记录bot的状态（控制bot只能同时处理一次请求）
-switch = True
 proxies = {
     "http://": f"http://127.0.0.1:{port}",
     "https://": f"http://127.0.0.1:{port}"
 }
+# 初始化一个全局变量，记录bot的状态（控制bot只能同时接受并处理一次请求）
+switch = True
 
-# 初始化字体样式
+# 初始化字体样式（自动重置字体样式）
 init(autoreset=True)
 
 
+# 查看后端状态信息
 @check_state.handle()
 async def _():
     logger.info(Fore.LIGHTCYAN_EX + f"当前后端URL为：{post_url}，本地代理端口号为：{port}")
 
 
+# 设置本地端口
 @set_port.handle()
-async def _(state: T_State):
+async def _(regex: tuple = RegexGroup()):
     global port, proxies
-    info = list(state["_matched_groups"])
-    port = info[0]
+    port = regex[0]
 
     # 判断是否为数字
     try:
@@ -51,6 +53,7 @@ async def _(state: T_State):
         if port != "None":
             await set_port.finish("请输入有效参数！")
 
+    # 取消代理模式
     if port == "None":
         proxies = None
         logger.success(Fore.LIGHTCYAN_EX + f"成功取消代理模式")
@@ -59,21 +62,22 @@ async def _(state: T_State):
             "http://": f"http://127.0.0.1:{port}",
             "https://": f"http://127.0.0.1:{port}"
         }
-        logger.success(Fore.LIGHTCYAN_EX + f"你的本地代理端口：{port}")
+        logger.success(Fore.LIGHTCYAN_EX + f"当前本地代理端口：{port}")
 
     await set_port.finish("本地代理端口设置成功，设置将在下一次请求时启用")
 
 
+# 设置后端URL
 @set_url.handle()
-async def _(state: T_State):
+async def _(regex: tuple = RegexGroup()):
     global post_url
-    info = list(state["_matched_groups"])
-    url = info[0]
+    url = regex[0]
     post_url = url + "generate-stream"
-    logger.success(Fore.LIGHTCYAN_EX + f"你的后端URL：{post_url}")
+    logger.success(Fore.LIGHTCYAN_EX + f"当前后端URL：{post_url}")
     await set_url.finish(f"url设置成功，设置将在下一次请求时启用")
 
 
+# 搜索魔咒
 @search_tag.handle()
 async def _(msg: Message = CommandArg()):
     tag = str(msg)
@@ -85,17 +89,17 @@ async def _(msg: Message = CommandArg()):
     await search_tag.finish(f"魔咒搜索结果：{tags[1]}")
 
 
+# 普通生图
 @process_img.handle()
-async def _(event: MessageEvent, state: T_State, bot: Bot):
+async def _(event: MessageEvent, bot: Bot, regex=RegexGroup()):
     global switch
     if switch is False:
         await process_img.finish("资源占用中！")
 
-    info = list(state["_matched_groups"])
     # 生成的图片尺寸
-    size = info[1]
+    size = regex[1]
     # 获取prompt
-    prompt = info[2]
+    prompt = regex[2]
 
     # 获取随机prompt
     if "RandomP" in prompt:
@@ -106,6 +110,8 @@ async def _(event: MessageEvent, state: T_State, bot: Bot):
             await process_img.finish("请输入条数！")
         else:
             prompt = random_prompt(num)
+
+    # 处理图片尺寸
     try:
         size = size.split("x")
     except AttributeError:
@@ -122,7 +128,7 @@ async def _(event: MessageEvent, state: T_State, bot: Bot):
     await process_img.send(Message(fr"[CQ:at,qq={id_}]正在生成图片，请稍等..."))
     logger.info(Fore.LIGHTYELLOW_EX + f"\n开始生成{name}的图片：\nsize={size[0]}，{size[1]}\nprompt={prompt}")
     switch = False
-    data = await get_data(post_url, size, prompt, proxies)
+    data = await get_data(post_url=post_url, size=size, prompt=prompt, proxies=proxies)
 
     if data[0] is False:
         switch = True
@@ -141,7 +147,6 @@ async def _(event: MessageEvent, state: T_State, bot: Bot):
 @img2img.handle()
 async def _(event: MessageEvent, bot: Bot):
     global switch
-
     if switch is False:
         await process_img.finish("资源占用中！")
 
@@ -155,6 +160,7 @@ async def _(event: MessageEvent, bot: Bot):
         switch = True
         await img2img.finish("缺少参数！")
     else:
+        # 处理图片尺寸
         try:
             size = size.split("x")
         except AttributeError:
@@ -174,21 +180,20 @@ async def _(event: MessageEvent, bot: Bot):
             else:
                 prompt = random_prompt(num)
 
+        # 获取用户ID
         id_ = get_userid(event)
+        # 获取图片URL
         img_url = get_userimg(event)
 
         if img_url is None:
             switch = True
             await img2img.finish(Message(fr"[CQ:at,qq={id_}]请发送图片！"))
 
-        # 下载用户发的图片
         switch = False
-
         await img2img.send(Message(f"[CQ:at,qq={id_}]正在获取图片"))
-        # 获取用户昵称
         name = (await bot.get_stranger_info(user_id=int(id_)))["nickname"]
         logger.info(Fore.LIGHTYELLOW_EX + f"开始获取{name}发送的图片")
-
+        # 下载用户发的图片
         img_data = await AsyncDownloadFile(url=img_url, proxies=proxies, timeout=5)
 
         if img_data[0] is False:
@@ -200,8 +205,8 @@ async def _(event: MessageEvent, bot: Bot):
 
         await img2img.send(Message(fr"[CQ:at,qq={id_}]正在生成图片，请稍等..."))
 
-        # 先把bytes转成base64，再把base64编码成字符串
-        img = b64encode(img_data[1]).decode()
+        # 先把bytes转成base64，再给base64编码
+        img = b64encode(img_data[1]).decode("utf-8")
         mode = "以图生图"
         switch = False
         logger.info(Fore.LIGHTYELLOW_EX + f"\n开始生成{name}的图片：\nsize={size[0]}，{size[1]}\nprompt={prompt}")

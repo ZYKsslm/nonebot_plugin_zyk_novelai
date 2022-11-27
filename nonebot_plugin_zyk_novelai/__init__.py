@@ -11,6 +11,10 @@ from base64 import b64encode, b64decode
 from re import findall
 from colorama import init, Fore
 
+
+__version__ = "2.6.1"
+
+
 # 构造响应器
 check_state = on_fullmatch(msg="check state", permission=SUPERUSER, priority=5, block=True)
 set_port = on_regex(pattern=r'set_port:(?P<port>.*)', permission=SUPERUSER, priority=5, block=True)
@@ -32,6 +36,8 @@ switch = True
 
 # 初始化字体样式（自动重置字体样式）
 init(autoreset=True)
+
+logger.success(Fore.LIGHTGREEN_EX + f"成功导入本插件，插件版本为{__version__}")
 
 
 # 查看后端状态信息
@@ -129,7 +135,7 @@ async def _(event: MessageEvent, bot: Bot, regex=RegexGroup()):
     name = (await bot.get_stranger_info(user_id=int(id_)))["nickname"]
 
     await process_img.send(Message(fr"[CQ:at,qq={id_}]正在生成图片，请稍等..."))
-    logger.info(Fore.LIGHTYELLOW_EX + f"\n开始生成{name}的图片：\nsize={size[0]}，{size[1]}\nprompt={prompt}")
+    logger.info(Fore.LIGHTYELLOW_EX + f"\n开始生成{name}的图片：\nsize={size[0]},{size[1]}\nprompt={prompt}")
     switch = False
     data = await get_data(post_url=post_url, size=size, prompt=prompt, proxies=proxies)
 

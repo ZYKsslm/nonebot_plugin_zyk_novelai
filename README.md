@@ -19,7 +19,7 @@ nb plugin install nonebot_plugin_zyk_novelai
    - 配置需要**科学上网**（大陆无法访问Colab）和**谷歌账号**
 
 2. 请按照要求配置好后在**env**中填写生成的URL或*使用指令发送给机器人*
-   - 注意，url格式通常为：`https://THIS-IS-A-SAMPLE.trycloudflare.com/` **末尾的斜杠“/”不能少！**
+   - 注意，URL格式通常为：`https://THIS-IS-A-SAMPLE.trycloudflare.com/` **末尾的斜杠“/”不能少！**
 
 3. 请在**env**中填写代理使用的的本地端口*或使用指令发送给机器人*，并确保开着代理，不然可能发送不了请求 *（报EOF相关的错误）*
 
@@ -93,7 +93,7 @@ ai绘图 | AI绘图 | ai作图 | AI作图 size= prompt=
 >#### 附参数说明
 > 新增参数strength和noise （此些参数为选填，且只有以图生图模式可以使用）
 > 
-> strength和noise都是一个*float（浮点）* 型的数，且应 **<=0.99**
+> strength和noise都是一个*float（浮点）* 类型的数，且应 **<=0.99**
 > 
 > strength（强度）：控制上传图像的更改量。较低的强度将生成更接近原始图像的图像，默认为0.7
 > 

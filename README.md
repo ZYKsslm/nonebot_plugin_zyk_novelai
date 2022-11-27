@@ -31,7 +31,7 @@ nb plugin install nonebot_plugin_zyk_novelai
 | novelai_proxy_port |                     10809                     | int  |  本地代理端口  |
 
 ## :label: 指令
-##### :clown_face: *不愿意看的可以直接去看源码*
+#### :clown_face: *不愿意看的可以直接去看源码*
 
 - #### 查看当前配置信息
 ```
@@ -119,3 +119,6 @@ ai绘图 | AI绘图 | ai作图 | AI作图 size= prompt=
 ![查看本地代理端口](port.png)
 
 其中的**端口**即你的本地代理端口
+
+---
+:heart: 最后，如果你喜欢本插件，就请给本插件点个:star:吧

@@ -48,7 +48,8 @@ set_url:https://THIS-IS-A-SAMPLE.trycloudflare.com/
 set_port:10809
 ```
 
->#### 附
+>#### :zap:
+>#### 附功能
 > 无代理模式
 > ```
 > set_port:None
@@ -63,14 +64,8 @@ ai绘图 | AI绘图 | ai作图 | AI作图 size= prompt=
    ai绘图 size=512x512 prompt={solo}, {{masterpiece}}, {{best quality}}, finely detail, meticulous painting
 ```
 
-- #### 以图生图
-
-和普通生图指令基本一样
-```
-以图生图 | img2img [your image] size= prompt=
-```
-
->#### 附
+>#### :zap:
+>#### 附功能
 >
 >随机prompt
 >
@@ -82,6 +77,27 @@ ai绘图 | AI绘图 | ai作图 | AI作图 size= prompt=
 >   ai绘图 size=512x512 prompt=RandomP 10
 >```
 >提一句，由于数据库里的tag太水了，所以随机的prompt要做好心理准备......
+
+- #### 以图生图
+
+和普通生图指令基本一样
+```
+以图生图 | img2img (your image) [strength=] [noise=] size= prompt=
+
+例：
+   img2img (an image) strength=0.5 noise=0.4 size=1024x512 prompt=RandomP 30
+```
+
+>#### :book:
+> 
+>#### 附参数说明
+> 新增参数strength和noise （此些参数为选填，且只有以图生图模式可以使用）
+> 
+> strength和noise都是一个*float（浮点）* 型的数，且应 **<=0.99**
+> 
+> strength（强度）：控制上传图像的更改量。较低的强度将生成更接近原始图像的图像，默认为0.7
+> 
+> noise（噪点）：较高的噪点会增加添加到上传图像的细节，但如果太高，则会导致伪影。通常，噪声应始终小于强度
 
 - #### 搜索魔咒
 ```

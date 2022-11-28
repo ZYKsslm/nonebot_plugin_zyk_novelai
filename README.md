@@ -2,6 +2,8 @@
 
 **基于4chan魔改版NovelAILeaks(naifu)制作（基础版，功能后面会陆续加上）**
 
+*:page_facing_up: 使用本插件前请仔细阅读README，请不要看都没看完就提issue，文档中写明的问题一律不回答*
+
 ## 安装方式
 - #### 使用pip
 ```

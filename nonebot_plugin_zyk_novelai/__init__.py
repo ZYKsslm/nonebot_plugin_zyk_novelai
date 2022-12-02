@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 from nonebot.adapters.onebot.v11 import MessageEvent, Message, MessageSegment, GROUP, PRIVATE_FRIEND, Bot
 from nonebot import on_regex, on_fullmatch, on_startswith, get_driver, on_command
-from nonebot.params import CommandArg, RegexGroup
+from nonebot.params import CommandArg, RegexGroup, RegexDict
 from nonebot.permission import SUPERUSER
 from nonebot.log import logger
 
@@ -11,9 +11,7 @@ from base64 import b64encode, b64decode
 from re import findall
 from colorama import init, Fore
 
-
-__version__ = "2.6.1"
-
+__version__ = "2.7"
 
 # 构造响应器
 check_state = on_fullmatch(msg="check state", permission=SUPERUSER, priority=5, block=True)
@@ -21,10 +19,11 @@ set_port = on_regex(pattern=r'set_port:(?P<port>.*)', permission=SUPERUSER, prio
 set_url = on_regex(pattern=r'set_url:(?P<url>.*/)', permission=SUPERUSER, priority=5, block=True)
 search_tag = on_command(cmd="补魔", aliases={"召唤魔咒", "搜索魔咒"}, permission=SUPERUSER, priority=5, block=True)
 img2img = on_startswith(msg=("以图生图", "img2img"), permission=GROUP | PRIVATE_FRIEND, priority=10, block=True)
-process_img = on_regex(pattern=r"^(?P<mode>ai绘图|AI绘图|ai作图|AI作图) size=(?P<size>\d+x\d+) prompt=(?P<prompt>.*)",
-                       permission=GROUP | PRIVATE_FRIEND, priority=10, block=True)
+# 令人头疼的正则表达式，可读性是个谜
+pattern = r'^(?P<mode>ai绘图|AI绘图|ai作图|AI作图)( uc=(?P<uc>.*?))?( seed=(?P<seed>\d+))?( scale=(?P<scale>\d+))?( steps=(?P<steps>\d+))?( size=(?P<size>\d+x\d+))? prompt=(?P<prompt>.*)'
+process_img = on_regex(pattern=pattern, permission=GROUP | PRIVATE_FRIEND, priority=10, block=True)
 
-# 从env中获取本地端口号和后端URL
+# 获取全局配置
 port = get_driver().config.novelai_proxy_port
 post_url = str(get_driver().config.novelai_post_url) + "generate-stream"
 proxies = {
@@ -94,21 +93,23 @@ async def _(msg: Message = CommandArg()):
 
     if tags[0] is False:
         await search_tag.finish("魔咒搜索失败！")
-
-    await search_tag.finish(f"魔咒搜索结果：{tags[1]}")
+    else:
+        await search_tag.finish(f"魔咒搜索结果：{tags[1]}")
 
 
 # 普通生图
 @process_img.handle()
-async def _(event: MessageEvent, bot: Bot, regex=RegexGroup()):
+async def _(event: MessageEvent, bot: Bot, regex: dict = RegexDict()):
     global switch
     if switch is False:
         await process_img.finish("资源占用中！")
 
-    # 生成的图片尺寸
-    size = regex[1]
-    # 获取prompt
-    prompt = regex[2]
+    seed = regex["seed"]
+    scale = regex["scale"]
+    steps = regex["steps"]
+    size = regex["size"]
+    prompt = regex["prompt"]
+    uc = regex["uc"]
 
     # 获取随机prompt
     if "RandomP" in prompt:
@@ -124,7 +125,7 @@ async def _(event: MessageEvent, bot: Bot, regex=RegexGroup()):
     try:
         size = size.split("x")
     except AttributeError:
-        size = [512, 768]
+        size = [512, 512]
     size = [int(size[0]), int(size[1])]
     if size[0] > 1024 or size[1] > 1024:
         switch = True
@@ -137,7 +138,7 @@ async def _(event: MessageEvent, bot: Bot, regex=RegexGroup()):
     await process_img.send(Message(fr"[CQ:at,qq={id_}]正在生成图片，请稍等..."))
     logger.info(Fore.LIGHTYELLOW_EX + f"\n开始生成{name}的图片：\nsize={size[0]},{size[1]}\nprompt={prompt}")
     switch = False
-    data = await get_data(post_url=post_url, size=size, prompt=prompt, proxies=proxies)
+    data = await get_data(post_url=post_url, size=size, prompt=prompt, proxies=proxies, uc=uc, steps=steps, scale=scale, seed=seed)
 
     if data[0] is False:
         switch = True
@@ -161,9 +162,7 @@ async def _(event: MessageEvent, bot: Bot):
 
     info = str(event.get_message())
     try:
-        # 获取图片尺寸
         size = findall(r'size=(?P<size>\d+x\d+)', info)[0]
-        # 获取prompt
         prompt = findall(r'prompt=(?P<prompt>.*)', info)[0]
     except IndexError:
         switch = True

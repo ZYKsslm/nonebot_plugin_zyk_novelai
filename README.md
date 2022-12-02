@@ -60,13 +60,14 @@ set_port:10809
 
 - #### 普通绘图
 ```
-ai绘图 | AI绘图 | ai作图 | AI作图 size= prompt=
+ai绘图 | AI绘图 | ai作图 | AI作图 [scale=] [steps=] [seed=] [uc=] [size=] prompt=
 
 例：
    ai绘图 size=512x512 prompt={solo}, {{masterpiece}}, {{best quality}}, finely detail, meticulous painting
 ```
 
 >#### :zap:
+> **更详细的参数说明见后文**
 >#### 附功能
 >
 >随机prompt
@@ -91,15 +92,11 @@ ai绘图 | AI绘图 | ai作图 | AI作图 size= prompt=
 ```
 
 >#### :book:
-> 
+> **更详细的参数说明见后文**
 >#### 附参数说明
 > 新增参数strength和noise （此些参数为选填，且只有以图生图模式可以使用）
 > 
 > strength和noise都是一个*float（浮点）* 类型的数，且应 **<=0.99**
-> 
-> strength（强度）：控制上传图像的更改量。较低的强度将生成更接近原始图像的图像，默认为0.7
-> 
-> noise（噪点）：较高的噪点会增加添加到上传图像的细节，但如果太高，则会导致伪影。通常，噪声应始终小于强度
 
 - #### 搜索魔咒
 ```
@@ -108,6 +105,36 @@ ai绘图 | AI绘图 | ai作图 | AI作图 size= prompt=
 例：
    /补魔 黑发
 ```
+
+## :bulb: 生图指令参数说明
+普通生图指令支持参数：
+- [x] scale *（可选）*
+- [x] steps *（可选）*
+- [x] seed *（可选）*
+- [x] size *（可选）*
+- [x] uc *（可选）*
+- [x] prompt
+
+以图生图指令支持参数
+- [x] size
+- [x] strength *（可选）*
+- [x] noise *（可选）*
+- [x] prompt
+
+#### :page_with_curl: 说明
+scale：在高scale下，提示将更紧密地遵循，细节和清晰度更高。低scale通常会导致更大的创作自由度，但清晰度降低
+
+steps：优化图像的迭代次数
+
+seed：图像种子
+
+size：图像尺寸
+
+strength：控制上传图像的更改量。较低的强度将生成更接近原始图像的图像
+
+noise：较高的噪点会增加添加到上传图像的细节，但如果太高，则会导致伪影。通常，噪声应始终小于强度
+
+uc：不需要的内容
 
 ## :egg: 补充
 >什么是本地代理端口？

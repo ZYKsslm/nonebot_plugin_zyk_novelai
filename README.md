@@ -60,7 +60,7 @@ set_port:10809
 
 - #### 普通绘图
 ```
-ai绘图 | AI绘图 | ai作图 | AI作图 [scale=] [steps=] [seed=] [uc=] [size=] prompt=
+ai绘图 | AI绘图 | ai作图 | AI作图 [scale=] [steps=] [size=] [seed=] [uc=] prompt=
 
 例：
    ai绘图 size=512x512 prompt={solo}, {{masterpiece}}, {{best quality}}, finely detail, meticulous painting
@@ -109,7 +109,7 @@ ai绘图 | AI绘图 | ai作图 | AI作图 [scale=] [steps=] [seed=] [uc=] [size=
 ## :bulb: 生图指令参数说明
 #### *Tips：在使用生图指令时，请严格规范指令格式（参数位置），否则可能无法触发响应*
 
-普通生图指令参数：
+普通生图指令支持参数：
 - [x] scale *（可选）*
 - [x] steps *（可选）*
 - [x] seed *（可选）*
@@ -117,7 +117,7 @@ ai绘图 | AI绘图 | ai作图 | AI作图 [scale=] [steps=] [seed=] [uc=] [size=
 - [x] uc *（可选）*
 - [x] prompt *（必选）*
 
-以图生图指令参数：
+以图生图指令支持参数：
 - [x] size *（必选）*
 - [x] strength *（可选）*
 - [x] noise *（可选）*
@@ -126,7 +126,7 @@ ai绘图 | AI绘图 | ai作图 | AI作图 [scale=] [steps=] [seed=] [uc=] [size=
 - [ ] uc *（暂不支持）*
 - [x] prompt *（必选）*
 
-#### :page_with_curl: 说明
+#### :page_with_curl: 参数解释
 scale：在高scale下，提示将更紧密地遵循，细节和清晰度更高。低scale通常会导致更大的创作自由度，但清晰度降低
 
 steps：优化图像的迭代次数

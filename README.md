@@ -94,7 +94,7 @@ ai绘图 | AI绘图 | ai作图 | AI作图 [scale=] [steps=] [seed=] [uc=] [size=
 >#### :book:
 > **更详细的参数说明见后文**
 >#### 附参数说明
-> 新增参数strength和noise （此些参数为选填，且只有以图生图模式可以使用）
+> 新增参数strength和noise
 > 
 > strength和noise都是一个*float（浮点）* 类型的数，且应 **<=0.99**
 
@@ -109,19 +109,22 @@ ai绘图 | AI绘图 | ai作图 | AI作图 [scale=] [steps=] [seed=] [uc=] [size=
 ## :bulb: 生图指令参数说明
 #### *Tips：在使用生图指令时，请严格规范指令格式（参数位置），否则可能无法触发响应*
 
-普通生图指令支持参数：
+普通生图指令参数：
 - [x] scale *（可选）*
 - [x] steps *（可选）*
 - [x] seed *（可选）*
 - [x] size *（可选）*
 - [x] uc *（可选）*
-- [x] prompt
+- [x] prompt *（必选）*
 
-以图生图指令支持参数
-- [x] size
+以图生图指令参数：
+- [x] size *（必选）*
 - [x] strength *（可选）*
 - [x] noise *（可选）*
-- [x] prompt
+- [ ] steps *（暂不支持）*
+- [ ] seed *（暂不支持）*
+- [ ] uc *（暂不支持）*
+- [x] prompt *（必选）*
 
 #### :page_with_curl: 说明
 scale：在高scale下，提示将更紧密地遵循，细节和清晰度更高。低scale通常会导致更大的创作自由度，但清晰度降低

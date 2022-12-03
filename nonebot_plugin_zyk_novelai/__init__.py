@@ -21,7 +21,7 @@ set_url = on_regex(pattern=r'set_url:(?P<url>.*/)', permission=SUPERUSER, priori
 search_tag = on_command(cmd="补魔", aliases={"召唤魔咒", "搜索魔咒"}, permission=SUPERUSER, priority=5, block=True)
 img2img = on_startswith(msg=("以图生图", "img2img"), permission=GROUP | PRIVATE_FRIEND, priority=10, block=True)
 # 令人头疼的正则表达式，可读性是个谜
-pattern = r'^(?P<mode>ai绘图|AI绘图|ai作图|AI作图)( uc=(?P<uc>.*?))?( seed=(?P<seed>\d+))?( scale=(?P<scale>\d+))?( steps=(?P<steps>\d+))?( size=(?P<size>\d+x\d+))? prompt=(?P<prompt>.*)'
+pattern = r'^(?P<mode>ai绘图|AI绘图|ai作图|AI作图)( scale=(?P<scale>\d+))?( steps=(?P<steps>\d+))?( size=(?P<size>\d+x\d+))?( seed=(?P<seed>\d+))?( uc=(?P<uc>.*?))? prompt=(?P<prompt>.*)'
 process_img = on_regex(pattern=pattern, permission=GROUP | PRIVATE_FRIEND, priority=10, block=True)
 
 # 获取全局配置

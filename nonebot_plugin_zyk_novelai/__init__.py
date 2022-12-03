@@ -12,7 +12,7 @@ from re import findall
 from random import randint
 from colorama import init, Fore
 
-__version__ = "2.7.1"
+__version__ = "2.7.2"
 
 # 构造响应器
 check_state = on_fullmatch(msg="check state", permission=SUPERUSER, priority=5, block=True)

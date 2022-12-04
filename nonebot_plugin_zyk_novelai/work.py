@@ -43,14 +43,14 @@ def get_userimg(event):
 
 def random_prompt(num):
     num = int(num)
-    db_path = os.path.abspath(os.path.dirname(__file__)) + r"\resource\novelai_tags.db"
+    db_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "resource", "novelai_tags.db")
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     off = random.randint(0, 1000 - num)
     cur.execute(f"select 英文词条 from  main_tags limit {num} offset {off}")
     tags = cur.fetchall()
 
-    prompt = "{{{Masterpiece}}}, {{best quality}}, beautifully painted, highly detailed, highres, Stunning art"
+    prompt = "{{Masterpiece}}, {{best quality}}, beautifully painted, highly detailed, highres, Stunning art"
     for tag in tags:
         prompt += ", " + tag[0]
 

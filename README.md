@@ -21,7 +21,8 @@ nb plugin install nonebot_plugin_zyk_novelai
    - 配置需要**科学上网**（大陆无法访问Colab）和**谷歌账号**
 
 2. 请按照要求配置好后在**env**中填写生成的URL或*使用指令发送给机器人*
-   - 注意，URL格式通常为：`https://THIS-IS-A-SAMPLE.trycloudflare.com/` **末尾的斜杠“/”不能少！**![image](url.png)
+   - 注意，URL格式通常为：`https://THIS-IS-A-SAMPLE.trycloudflare.com/` **注意加上末尾的斜杠“/”！**
+![image](url.png)
 
 3. 请在**env**中填写代理使用的的本地端口*或使用指令发送给机器人*，并确保开着代理，不然可能发送不了请求 *（报EOF相关的错误）*
 

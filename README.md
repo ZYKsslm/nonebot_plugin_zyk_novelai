@@ -27,10 +27,10 @@ nb plugin install nonebot_plugin_zyk_novelai
 
 ## :wrench: env配置
 
-|        Name        |                    Example                    |      Type       |  Usage   |
-|:------------------:|:---------------------------------------------:|:---------------:|:--------:|
-|  novelai_post_url  | `https://THIS-IS-A-SAMPLE.trycloudflare.com/` |       str       |  后端URL   |
-| novelai_proxy_port |                     10809                     | int or NoneType |  本地代理端口  |
+|        Name        |                    Example                    |    Type    | Usage  |
+|:------------------:|:---------------------------------------------:|:----------:|:------:|
+|  novelai_post_url  | `https://THIS-IS-A-SAMPLE.trycloudflare.com/` |    str     | 后端URL  |
+| novelai_proxy_port |                     10809                     | int or str | 本地代理端口 |
 
 ## :label: 指令
 #### :clown_face: *不愿意看的可以直接去看源码*

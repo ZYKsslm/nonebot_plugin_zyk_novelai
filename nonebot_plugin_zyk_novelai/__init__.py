@@ -12,7 +12,7 @@ from re import findall
 from random import randint
 from colorama import init, Fore
 
-__version__ = "2.7.3"
+__version__ = "2.7.4"
 
 # 构造响应器
 check_state = on_fullmatch(msg="check state", permission=SUPERUSER, priority=5, block=True)
@@ -25,16 +25,25 @@ pattern = r'^(?P<mode>ai绘图|AI绘图|ai作图|AI作图)( scale=(?P<scale>\d+)
 process_img = on_regex(pattern=pattern, permission=GROUP | PRIVATE_FRIEND, priority=10, block=True)
 
 # 获取全局配置
-port = get_driver().config.novelai_proxy_port
-post_url = str(get_driver().config.novelai_post_url) + "generate-stream"
-
-if port == "None":
-    proxies = None
+try:
+    port = get_driver().config.novelai_proxy_port
+    post_url = str(get_driver().config.novelai_post_url) + "generate-stream"
+except AttributeError:
+    logger.warning(Fore.LIGHTYELLOW_EX + "缺少env配置项！")
 else:
-    proxies = {
-        "http://": f"http://127.0.0.1:{port}",
-        "https://": f"http://127.0.0.1:{port}"
-    }
+    if port == "None":
+        proxies = None
+    else:
+        try:
+            int(port)
+        except ValueError:
+            logger.warning(Fore.LIGHTYELLOW_EX + "novelai_proxy_port配置格式错误！")
+            proxies = None
+        else:
+            proxies = {
+                "http://": f"http://127.0.0.1:{port}",
+                "https://": f"http://127.0.0.1:{port}"
+            }
 
 # 初始化一个全局变量，记录bot的状态（控制bot只能同时接受并处理一次请求）
 switch = True

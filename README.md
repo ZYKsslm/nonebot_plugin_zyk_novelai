@@ -1,8 +1,30 @@
 # :memo: nonebot_plugin_zyk_novelai
 
-**基于4chan魔改版NovelAILeaks(naifu)制作（基础版，功能后面会陆续加上）**
+**基于4chan魔改版NovelAILeaks(naifu)制作**
 
-*:page_facing_up: 使用本插件前请仔细阅读README，文档中写明的问题一律不回答*
+*:page_facing_up: 使用本插件前请仔细阅读README文档*
+
+##### 推荐一个我的点歌插件[nonebot_plugin_zyk_music](https://github.com/ZYKsslm/nonebot_plugin_zyk_music)
+
+## :sparkles: 新版本一览
+>由于维护较勤，为方便用户了解最新更新内容，特此新增**新版本一览**一栏
+
+### :pushpin: version 2.8
+>都更新了哪些内容？
+1. 重写普通生图正则响应器
+   - 省略*prompt*参数**默认使用随机prompt**，更加简洁，当然tag个数也是随机的。不过依然可以使用`RandomP (num)`*随机prompt指令参数*指定tag个数
+2. 重写以图生图正则响应器
+   - 以图生图模式添加*scale*、*uc*、*seed*参数。至此，naifu支持的以图生图的参数现在**插件都已支持**
+   - *size*参数更改为可选参数，默认为**512x512**
+
+### :chart_with_upwards_trend: 预计未来更新的内容
+>至后，本插件的功能都已经基本完善，预计将不会有重要更新
+1. 添加用户CD冷却时间功能
+2. 添加消息撤回功能
+3. 添加图片可自动保存至本地功能
+4. 添加以图生图自动获取图片尺寸功能
+5. 更新tag数据库
+6. 待续......
 
 ## 安装方式
 - #### 使用pip
@@ -22,9 +44,10 @@ nb plugin install nonebot_plugin_zyk_novelai
 
 2. 请按照要求配置好后在**env**中填写生成的URL或*使用指令发送给机器人*
    - 注意，URL格式通常为：`https://THIS-IS-A-SAMPLE.trycloudflare.com/` **注意加上末尾的斜杠“/”！**
+
 ![image](url.png)
 
-3. 请在**env**中填写代理使用的的本地端口*或使用指令发送给机器人*，并确保开着代理，不然可能发送不了请求 *（报EOF相关的错误）*
+3. 如果使用代理请在**env**中填写代理使用的的本地代理端口*或使用指令发送给机器人*，并确保开着代理，不然可能发送不了请求 *（报EOF相关的错误）*
 
 ## :wrench: env配置
 
@@ -45,11 +68,19 @@ check state
 ```
 set_url:https://THIS-IS-A-SAMPLE.trycloudflare.com/
 ```
+>或直接在env配置文件中填写
+> ```
+> novelai_post_url=https://THIS-IS-A-SAMPLE.trycloudflare.com/
+> ```
 
 - #### 设置本地代理端口
 ```
 set_port:10809
 ```
+>或直接在env配置文件中填写
+> ```
+> novelai_proxy_port=10809
+> ```
 
 >#### :zap:
 >#### 附功能
@@ -57,45 +88,50 @@ set_port:10809
 > ```
 > set_port:None
 > ```
+> 或直接在env配置文件中填写
+> ```
+> novelai_proxy_port=None
+> ```
 > **注意，None开头为大写**
 
 - #### 普通绘图
 ```
-ai绘图 | AI绘图 | ai作图 | AI作图 [scale=] [steps=] [size=] [seed=] [uc=] prompt=
+ai绘图 | AI绘图 | ai作图 | AI作图 [scale=] [steps=] [size=] [seed=] [prompt=] [uc=]
 
 例：
-   ai绘图 size=512x512 prompt={solo}, {{masterpiece}}, {{best quality}}, finely detail, meticulous painting
+   ai绘图 size=512x768 prompt={solo}, {{masterpiece}}, {{best quality}}, finely detail, meticulous painting
 ```
 
 >#### :zap:
-> **更详细的参数说明见后文**
 >#### 附功能
 >
->随机prompt
+>*随机prompt*
 >
 >*以图生图和普通模式都可以使用*
->```
->prompt=RandomP 条数
->
->例：
->   ai绘图 size=512x512 prompt=RandomP 10
->```
->提一句，由于数据库里的tag太水了，所以随机的prompt要做好心理准备......
+> 
+>1. 不加*prompt参数*默认使用随机prompt，当然tag个数也将随机
+>2. 使用*随机prompt指令参数*指定tag个数
+>   - ```
+>     prompt=RandomP (num)
+>     
+>     例：
+>        prompt=RandomP 30
+>     ```
 
 - #### 以图生图
 
 和普通生图指令基本一样
 ```
-以图生图 | img2img (your image) [strength=] [noise=] size= prompt=
+以图生图 | img2img (your image) [strength=] [noise=] [scale=] [size=] [seed=] [prompt=] [uc=]
 
 例：
-   img2img (an image) strength=0.5 noise=0.4 size=1024x512 prompt=RandomP 30
+   img2img (an image) strength=0.5 noise=0.4 size=1024x512
 ```
 
 >#### :book:
 > **更详细的参数说明见后文**
 >#### 附参数说明
-> 新增参数strength和noise
+> 参数strength和noise
 > 
 > strength和noise都是一个*float（浮点）* 类型的数，且应 **<=0.99**
 
@@ -108,24 +144,24 @@ ai绘图 | AI绘图 | ai作图 | AI作图 [scale=] [steps=] [size=] [seed=] [uc=
 ```
 
 ## :bulb: 生图指令参数说明
-#### *Tips：在使用生图指令时，请严格规范指令格式（参数位置），否则可能无法触发响应*
+#### *Tips：在使用生图指令时，请严格规范指令格式（参数位置），否则无法触发响应*
 ### 参数支持
 普通生图指令支持参数：
-- [x] scale *（可选）*
-- [x] steps *（可选）*
-- [x] seed *（可选）*
-- [x] size *（可选）*
+- [x] scale *（可选）* 默认**12**
+- [x] steps *（可选）* 默认**28**
+- [x] seed *（可选）* 默认**随机**
+- [x] size *（可选）* 默认**512x512**
 - [x] uc *（可选）*
-- [x] prompt *（必选）*
+- [x] prompt *（可选）* 默认**随机**
 
 以图生图指令支持参数：
-- [x] size *（必选）*
-- [x] strength *（可选）*
-- [x] noise *（可选）*
-- [ ] steps *（暂不支持）*
-- [ ] seed *（暂不支持）*
-- [ ] uc *（暂不支持）*
-- [x] prompt *（必选）*
+- [x] size *（可选）* 默认**512x512**
+- [x] strength *（可选）* 默认**0.7**
+- [x] noise *（可选）* 默认**0.2**
+- [x] scale *（可选）* 默认**12**
+- [x] seed *（可选）* 默认**随机**
+- [x] uc *（可选）*
+- [x] prompt *（可选）* 默认**随机**
 
 ### :page_with_curl: 参数解释
 - **scale**：在高scale下，提示将更紧密地遵循，细节和清晰度更高。低scale通常会导致更大的创作自由度，但清晰度降低
@@ -143,7 +179,7 @@ ai绘图 | AI绘图 | ai作图 | AI作图 [scale=] [steps=] [size=] [seed=] [uc=
 - **uc**：不需要的内容
 
 ## :egg: 补充
->什么是本地代理端口？
+>:question: 什么是本地代理端口？
 
 可能有人不明白什么是本地代理端口（也有可能是我的措辞问题），这里提一下
 
@@ -156,4 +192,6 @@ ai绘图 | AI绘图 | ai作图 | AI作图 [scale=] [steps=] [size=] [seed=] [uc=
 其中的**端口**即你的本地代理端口
 
 ---
+:bug: 如果发现插件有BUG或有建议，欢迎**合理**提*Issue*
+
 :heart: 最后，如果你喜欢本插件，就请给本插件点个:star:吧

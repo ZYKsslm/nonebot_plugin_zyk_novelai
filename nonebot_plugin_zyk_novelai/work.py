@@ -41,8 +41,8 @@ def get_userimg(event):
         return img_url
 
 
-def random_prompt(num):
-    num = int(num)
+def random_prompt(order):
+    num = int(order)
     db_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "resource", "novelai_tags.db")
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
@@ -80,12 +80,11 @@ async def search_tags(tag, proxies):
 
 
 async def get_data(
-    post_url, prompt, proxies,
-    img=None, mode=None, strength=None,
-    noise=None, size=None, uc=None,
-    scale=None, steps=None, seed=None
+        post_url, prompt, proxies,
+        img=None, mode=None, strength=None,
+        noise=None, size=None, uc=None,
+        scale=None, steps=None, seed=None
 ):
-
     data = {
         "width": size[0],
         "height": size[1],
@@ -121,8 +120,7 @@ async def get_data(
 
         # 获取错误原因
         if "error" in info:
-            error = findall(r'"error":"(?P<error>.*?)"', info)[0]
-            return False, error
+            return False, info
 
         # 获取返回的图片base64
         base64_img = findall(r'data:(?P<base64>.*)', info)[0]

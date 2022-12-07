@@ -7,12 +7,12 @@
 ##### 推荐一个我的点歌插件[nonebot_plugin_zyk_music](https://github.com/ZYKsslm/nonebot_plugin_zyk_music)
 
 ## :sparkles: 新版本一览
->由于维护较勤，为方便用户了解最新更新内容，特此新增**新版本一览**一栏
+>为方便用户了解最新更新内容，新增**新版本一览**一栏
 
 ### :pushpin: version 2.8
 >都更新了哪些内容？
 1. 重写普通生图正则响应器
-   - 省略*prompt*参数**默认使用随机prompt**，更加简洁，当然tag个数也是随机的。不过依然可以使用`RandomP (num)`*随机prompt指令参数*指定tag个数
+   - 省略*prompt*参数则**默认使用随机prompt**，更加简洁，当然tag个数也是随机的。不过依然可以使用`RandomP (num)`*随机prompt指令参数*指定tag个数
 2. 重写以图生图正则响应器
    - 以图生图模式添加*scale*、*uc*、*seed*参数。至此，naifu支持的以图生图的参数现在**插件都已支持**
    - *size*参数更改为可选参数，默认为**512x512**
@@ -104,7 +104,7 @@ ai绘图 | AI绘图 | ai作图 | AI作图 [scale=] [steps=] [size=] [seed=] [pro
 >#### :zap:
 >#### 附功能
 >
->*随机prompt*
+>*随机prompt指令参数*
 >
 >*以图生图和普通模式都可以使用*
 > 
@@ -128,11 +128,10 @@ ai绘图 | AI绘图 | ai作图 | AI作图 [scale=] [steps=] [size=] [seed=] [pro
 ```
 
 >#### :book:
-> **更详细的参数说明见后文**
 >#### 附参数说明
-> 参数strength和noise
-> 
-> strength和noise都是一个*float（浮点）* 类型的数，且应 **<=0.99**
+> **更详细的参数说明见后文**
+>
+> 参数strength和noise都是一个*float（浮点）* 类型的数，且应 **<=0.99**
 
 - #### 搜索魔咒
 ```

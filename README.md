@@ -4,18 +4,11 @@
 
 *:page_facing_up: 使用本插件前请仔细阅读README文档*
 
-##### 推荐一个我的点歌插件[nonebot_plugin_zyk_music](https://github.com/ZYKsslm/nonebot_plugin_zyk_music)
 
-## :sparkles: 新版本一览
->为方便用户了解最新更新内容，新增**新版本一览**一栏
-
-### :pushpin: version 2.8
+### :pushpin: version 2.8.1
 >都更新了哪些内容？
 1. 重写普通生图正则响应器
-   - 省略*prompt*参数则**默认使用随机prompt**，更加简洁，当然tag个数也是随机的。不过依然可以使用`RandomP (num)`*随机prompt指令参数*指定tag个数
-2. 重写以图生图正则响应器
-   - 以图生图模式添加*scale*、*uc*、*seed*参数。至此，naifu支持的以图生图的参数现在**插件都已支持**
-   - *size*参数更改为可选参数，默认为**512x512**
+   - :bug: 修复了关于*prompt和uc两个参数匹配异常的BUG*
 
 ### :chart_with_upwards_trend: 预计未来更新的内容
 1. 添加用户CD冷却时间功能
@@ -46,7 +39,7 @@ nb plugin install nonebot_plugin_zyk_novelai
 
 ![image](url.png)
 
-3. 如果使用代理请在**env**中填写代理使用的的本地代理端口*或使用指令发送给机器人*，并确保开着代理，不然可能发送不了请求 *（报EOF相关的错误）*
+3. 如果使用代理请在**env**中填写代理使用的的本地代理端口*或使用指令发送给机器人*，并确保开着代理，不然可能请求异常 *（报EOF相关的错误）*
 
 ## :wrench: env配置
 
@@ -179,11 +172,9 @@ ai绘图 | AI绘图 | ai作图 | AI作图 [scale=] [steps=] [size=] [seed=] [pro
 ## :egg: 补充
 >:question: 什么是本地代理端口？
 
-可能有人不明白什么是本地代理端口（也有可能是我的措辞问题），这里提一下
-
 本地代理端口指的就是你的**代理软件**所使用的（系统）端口
 
-不知道本地代理端口在哪里的可以看这里 *（以Windows 10 为例）*
+如何查看本地代理端口？ *（以Windows 10 为例）*
 
 ![查看本地代理端口](port.png)
 

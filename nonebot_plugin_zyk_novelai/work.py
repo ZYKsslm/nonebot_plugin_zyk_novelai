@@ -1,7 +1,7 @@
 from httpx import AsyncClient
 from fake_useragent import UserAgent
 import random
-from re import compile, findall
+from re import findall
 import sqlite3
 import os
 
@@ -30,17 +30,6 @@ def get_userid(event):
     return id_
 
 
-def get_userimg(event):
-    img_info = str(event.get_message())
-    url_pattern = compile(r'url=(?P<url>.*?)]')
-    try:
-        img_url = findall(url_pattern, img_info)[0]
-    except IndexError:
-        return None
-    else:
-        return img_url
-
-
 def random_prompt(order):
     num = int(order)
     db_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "resource", "novelai_tags.db")
@@ -50,7 +39,7 @@ def random_prompt(order):
     cur.execute(f"select 英文词条 from  main_tags limit {num} offset {off}")
     tags = cur.fetchall()
 
-    prompt = "{{Masterpiece}}, {{best quality}}, beautifully painted, highly detailed, highres, Stunning art"
+    prompt = "masterpiece, best quality, highly detailed"
     for tag in tags:
         prompt += ", " + tag[0]
 
@@ -118,7 +107,7 @@ async def get_data(
             return False, error
         info = resp.text
 
-        # 获取错误原因
+        # 获取错误
         if "error" in info:
             return False, info
 

@@ -13,7 +13,7 @@ from random import randint
 from colorama import init, Fore
 
 
-__version__ = "2.8.2"
+__version__ = "2.8.3"
 
 
 # 构造响应器
@@ -25,7 +25,7 @@ search_tag = on_command(cmd="补魔", aliases={"召唤魔咒", "搜索魔咒"}, 
 pattern = r'^(?P<mode>ai绘图|AI绘图|ai作图|AI作图)( scale=(?P<scale>\d+))?( steps=(?P<steps>\d+))?( size=(?P<size>\d+x\d+))?( seed=(?P<seed>\d+))?( prompt=(?P<prompt>.+))?'
 process_img = on_regex(pattern=pattern, permission=GROUP | PRIVATE_FRIEND, priority=10, block=True)
 # 以图生图正则
-img2img_pattern = r'^img2img|以图生图.*?url=(?P<url>.*);.*?\](.*?strength=(?P<strength>\d\.\d))?(.*?noise=(?P<noise>\d\.\d))?(.*?scale=(?P<scale>\d+))?(.*?size=(?P<size>\d+x\d+))?(.*?seed=(?P<seed>\d+))?(.*?prompt=(?P<prompt>.+))?'
+img2img_pattern = r'^(img2img|以图生图).*?url=(?P<url>.*);.*?\](.*?strength=(?P<strength>\d\.\d))?(.*?noise=(?P<noise>\d\.\d))?(.*?scale=(?P<scale>\d+))?(.*?size=(?P<size>\d+x\d+))?(.*?seed=(?P<seed>\d+))?(.*?prompt=(?P<prompt>.+))?'
 img2img = on_regex(pattern=img2img_pattern, flags=S, permission=GROUP | PRIVATE_FRIEND, priority=10, block=True)
 
 
@@ -165,7 +165,7 @@ async def _(event: MessageEvent, bot: Bot, regex: dict = RegexDict()):
             if_randomP = False
 
         try:
-            uc = findall(r'uc=(?P<uc>.+)', prompt)[0]
+            uc = findall(r'uc=(?P<uc>.+)', str(event.get_plaintext()))[0]
         except IndexError:
             pass
         else:
@@ -283,7 +283,7 @@ async def _(event: MessageEvent, bot: Bot, regex: dict = RegexDict()):
             if_randomP = False
 
         try:
-            uc = findall(r'uc=(?P<uc>.+)', prompt)[0]
+            uc = findall(r'uc=(?P<uc>.+)', str(event.get_plaintext()))[0]
         except IndexError:
             pass
         else:

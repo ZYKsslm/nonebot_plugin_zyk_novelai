@@ -49,8 +49,11 @@ nb plugin install nonebot_plugin_zyk_novelai
 
 3. 如果使用代理请在**env**中填写代理使用的的本地代理端口*或使用指令发送给机器人*，并确保开着代理，不然可能请求异常 *（报EOF相关的错误）*
 
-4. 普通谷歌账户使用Colab会有GPU使用时限，想要解决除了付费购买就只能多开几个谷歌账户，还有一种办法就是使用本地版的naifu，不过需要有NVIDIA显卡
+4. Colab端无法配置问题
+   - 普通谷歌账户使用Colab会有GPU使用时限，想要解决除了付费购买就只能多开几个谷歌账户，还有一种办法就是使用本地版的naifu，不过需要有NVIDIA显卡
+
    ![image](colab.png)
+
 ## :wrench: env配置
 
 |        Name        |                    Example                    |    Type    | Usage  |

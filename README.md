@@ -97,7 +97,7 @@ set_port:10809
 ai绘图 | AI绘图 | ai作图 | AI作图 [scale=] [steps=] [size=] [seed=] [prompt=] [uc=]
 
 例：
-   ai绘图 size=512x768 prompt={solo}, {{masterpiece}}, {{best quality}}, finely detail, meticulous painting
+   ai绘图 steps=50 prompt={masterpiece}, best quality, {1 girl with black long hair and {{red light eyes}} wearing white dress and white leggings}, {loli:2}, full body, {sitting in sofa}, {looking at viewer} AND {dislike and void}, dark background
 ```
 
 >#### :zap:

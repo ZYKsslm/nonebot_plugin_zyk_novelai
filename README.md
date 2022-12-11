@@ -1,10 +1,10 @@
 # :memo: nonebot_plugin_zyk_novelai
 
-**基于4chan魔改版NovelAILeaks(naifu)制作**
+*本插件基于4chan魔改版NovelAILeaks(naifu)的Colab端配置制作*
 
 *:page_facing_up: 使用本插件前请仔细阅读README文档*
 
-
+## :sparkles: 新版本一览
 ### :pushpin: version 2.8.2
 >都更新了哪些内容？
 1. 重写普通生图正则响应器
@@ -56,7 +56,6 @@ nb plugin install nonebot_plugin_zyk_novelai
 | novelai_proxy_port |                     10809                     | int or str | 本地代理端口 |
 
 ## :label: 指令
-#### :clown_face: *不愿意看的可以直接去看源码*
 
 - #### 查看当前配置信息
 ```
@@ -67,31 +66,31 @@ check state
 ```
 set_url:https://THIS-IS-A-SAMPLE.trycloudflare.com/
 ```
->或直接在env配置文件中填写
-> ```
-> novelai_post_url=https://THIS-IS-A-SAMPLE.trycloudflare.com/
-> ```
+或直接在env配置文件中填写
+```
+novelai_post_url=https://THIS-IS-A-SAMPLE.trycloudflare.com/
+```
 
 - #### 设置本地代理端口
 ```
 set_port:10809
 ```
->或直接在env配置文件中填写
-> ```
-> novelai_proxy_port=10809
-> ```
+或直接在env配置文件中填写
+```
+novelai_proxy_port=10809
+```
 
->#### :zap:
->#### 附功能
-> 无代理模式
-> ```
-> set_port:None
-> ```
-> 或直接在env配置文件中填写
-> ```
-> novelai_proxy_port=None
-> ```
-> **注意，None开头为大写**
+#### :zap:
+#### 附功能
+无代理模式
+```
+set_port:None
+```
+或直接在env配置文件中填写
+```
+novelai_proxy_port=None
+```
+**注意，None开头为大写**
 
 - #### 普通绘图
 ```
@@ -101,21 +100,19 @@ ai绘图 | AI绘图 | ai作图 | AI作图 [scale=] [steps=] [size=] [seed=] [pro
    ai绘图 steps=50 prompt={masterpiece}, best quality, {1 girl with black long hair and {{red light eyes}} wearing white dress and white leggings}, {loli:2}, full body, {sitting in sofa}, {looking at viewer} AND {dislike and void}, dark background
 ```
 
->#### :zap:
->#### 附功能
->
->*随机prompt指令参数*
->
->*以图生图和普通模式都可以使用*
-> 
->1. 不加*prompt参数*默认使用随机prompt，当然tag个数也将随机
->2. 使用*随机prompt指令参数*指定tag个数
->   - ```
->     prompt=RandomP (num)
->     
->     例：
->        prompt=RandomP 30
->     ```
+#### :zap:
+#### 附功能
+*随机prompt指令参数*
+
+*以图生图和普通模式都可以使用*
+1. 不加*prompt参数*默认使用随机prompt，当然tag个数也将随机
+2. 使用*随机prompt指令参数*指定tag个数
+   ```
+   prompt=RandomP (num)
+     
+   例：
+      prompt=RandomP 30
+   ```
 
 - #### 以图生图
 
@@ -127,11 +124,11 @@ ai绘图 | AI绘图 | ai作图 | AI作图 [scale=] [steps=] [size=] [seed=] [pro
    img2img (an image) strength=0.5 noise=0.4 size=1024x512
 ```
 
->#### :book:
->#### 附参数说明
-> **更详细的参数说明见后文**
->
-> 参数strength和noise都是一个*float（浮点）* 类型的数，且应 **<=0.99**
+#### :book:
+#### 附参数说明
+**更详细的参数说明见后文**
+
+参数strength和noise都是一个*float（浮点）* 类型的数，且应 **<=0.99**
 
 - #### 搜索魔咒
 ```

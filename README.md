@@ -86,7 +86,7 @@ set_port:10809
 novelai_proxy_port=10809
 ```
 
-- *无代理模式*
+- #### *无代理模式*
 ```
 set_port:None
 ```
@@ -104,7 +104,7 @@ ai绘图 | AI绘图 | ai作图 | AI作图 [scale=] [steps=] [size=] [seed=] [pro
    ai绘图 steps=50 prompt={masterpiece}, best quality, {1 girl with black long hair and {{red light eyes}} wearing white dress and white leggings}, {loli:2}, full body, {sitting in sofa}, {looking at viewer} AND {dislike and void}, dark background
 ```
 
-- *随机prompt指令参数*
+- #### *随机prompt指令参数*
 
 *以图生图和普通模式都可以使用*
 1. 不加*prompt参数*默认使用随机prompt，当然tag个数也将随机

@@ -4,6 +4,8 @@
 
 *:page_facing_up: 使用本插件前请仔细阅读README文档*
 
+*由于个人原因，本插件将在未来很长一段时间内停止维护*
+
 ## :sparkles: 新版本一览
 ### :pushpin: version 2.8.2
 >都更新了哪些内容？
@@ -41,13 +43,14 @@ nb plugin install nonebot_plugin_zyk_novelai
    - 配置需要**科学上网**（大陆无法访问Colab）和**谷歌账户**
 
 2. 请按照要求配置好后在**env**中填写生成的URL或*使用指令发送给机器人*
-   - 注意，URL格式通常为：`https://THIS-IS-A-SAMPLE.trycloudflare.com/` **注意加上末尾的斜杠“/”！**
+   - 注意，URL格式通常为：`https://THIS-IS-A-SAMPLE.trycloudflare.com/` **注意在末尾加上斜杠“/”！**
 
-![image](url.png)
+   ![image](url.png)
 
 3. 如果使用代理请在**env**中填写代理使用的的本地代理端口*或使用指令发送给机器人*，并确保开着代理，不然可能请求异常 *（报EOF相关的错误）*
-4. 普通谷歌账户使用Colab白嫖GPU算力会有使用时限，除了付费购买就只能多开几个谷歌账户了，还有一种办法就是使用本地版的naifu，不过不知道能不能适配
 
+4. 普通谷歌账户使用Colab会有GPU使用时限，想要解决除了付费购买就只能多开几个谷歌账户，还有一种办法就是使用本地版的naifu，不过需要有NVIDIA显卡
+   ![image](colab.png)
 ## :wrench: env配置
 
 |        Name        |                    Example                    |    Type    | Usage  |
@@ -57,12 +60,12 @@ nb plugin install nonebot_plugin_zyk_novelai
 
 ## :label: 指令
 
-- #### 查看当前配置信息
+### 查看当前配置信息
 ```
 check state
 ```
 
-- #### 设置后端URL
+### 设置后端URL
 ```
 set_url:https://THIS-IS-A-SAMPLE.trycloudflare.com/
 ```
@@ -71,7 +74,7 @@ set_url:https://THIS-IS-A-SAMPLE.trycloudflare.com/
 novelai_post_url=https://THIS-IS-A-SAMPLE.trycloudflare.com/
 ```
 
-- #### 设置本地代理端口
+### 设置本地代理端口
 ```
 set_port:10809
 ```
@@ -80,9 +83,7 @@ set_port:10809
 novelai_proxy_port=10809
 ```
 
-#### :zap:
-#### 附功能
-无代理模式
+- *无代理模式*
 ```
 set_port:None
 ```
@@ -92,7 +93,7 @@ novelai_proxy_port=None
 ```
 **注意，None开头为大写**
 
-- #### 普通绘图
+### 普通绘图
 ```
 ai绘图 | AI绘图 | ai作图 | AI作图 [scale=] [steps=] [size=] [seed=] [prompt=] [uc=]
 
@@ -100,9 +101,7 @@ ai绘图 | AI绘图 | ai作图 | AI作图 [scale=] [steps=] [size=] [seed=] [pro
    ai绘图 steps=50 prompt={masterpiece}, best quality, {1 girl with black long hair and {{red light eyes}} wearing white dress and white leggings}, {loli:2}, full body, {sitting in sofa}, {looking at viewer} AND {dislike and void}, dark background
 ```
 
-#### :zap:
-#### 附功能
-*随机prompt指令参数*
+- *随机prompt指令参数*
 
 *以图生图和普通模式都可以使用*
 1. 不加*prompt参数*默认使用随机prompt，当然tag个数也将随机
@@ -114,7 +113,7 @@ ai绘图 | AI绘图 | ai作图 | AI作图 [scale=] [steps=] [size=] [seed=] [pro
       prompt=RandomP 30
    ```
 
-- #### 以图生图
+### 以图生图
 
 和普通生图指令基本一样
 ```
@@ -124,13 +123,13 @@ ai绘图 | AI绘图 | ai作图 | AI作图 [scale=] [steps=] [size=] [seed=] [pro
    img2img (an image) strength=0.5 noise=0.4 size=1024x512
 ```
 
-#### :book:
-#### 附参数说明
-**更详细的参数说明见后文**
+- #### :book: 附参数说明
+
+更详细的参数说明见后文
 
 参数strength和noise都是一个*float（浮点）* 类型的数，且应 **<=0.99**
 
-- #### 搜索魔咒
+### 搜索魔咒
 ```
 (COMMAND_START)补魔 | 召唤魔咒 | 搜索魔咒 中文名
 
@@ -139,7 +138,7 @@ ai绘图 | AI绘图 | ai作图 | AI作图 [scale=] [steps=] [size=] [seed=] [pro
 ```
 
 ## :bulb: 生图指令参数说明
-#### *Tips：在使用生图指令时，请严格规范指令格式（参数位置），否则无法触发响应*
+#### *在使用生图指令时，请严格规范指令格式（参数位置），否则无法触发响应*
 ### 参数支持
 普通生图指令支持参数：
 - [x] scale *（可选）* 默认**12**

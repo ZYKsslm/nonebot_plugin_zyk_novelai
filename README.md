@@ -38,7 +38,7 @@ nb plugin install nonebot_plugin_zyk_novelai
 
 ## :rocket: 配置后端（Colab部署）
 1. 后端配置地址：[配置后端](https://colab.research.google.com/drive/1_Ma71L6uGbtt6UQyA3FjqW2lcZ5Bjck-)
-   - 配置需要**科学上网**（大陆无法访问Colab）和**谷歌账号**
+   - 配置需要**科学上网**（大陆无法访问Colab）和**谷歌账户**
 
 2. 请按照要求配置好后在**env**中填写生成的URL或*使用指令发送给机器人*
    - 注意，URL格式通常为：`https://THIS-IS-A-SAMPLE.trycloudflare.com/` **注意加上末尾的斜杠“/”！**
@@ -46,6 +46,7 @@ nb plugin install nonebot_plugin_zyk_novelai
 ![image](url.png)
 
 3. 如果使用代理请在**env**中填写代理使用的的本地代理端口*或使用指令发送给机器人*，并确保开着代理，不然可能请求异常 *（报EOF相关的错误）*
+4. 普通谷歌账户使用Colab白嫖GPU算力会有使用时限，除了付费购买就只能多开几个谷歌账户了，还有一种办法就是使用本地版的naifu，不过不知道能不能适配
 
 ## :wrench: env配置
 

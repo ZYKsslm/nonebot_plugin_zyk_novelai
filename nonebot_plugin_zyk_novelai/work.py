@@ -102,7 +102,7 @@ async def get_data(
 
     async with AsyncClient(headers=headers, proxies=proxies) as client:
         try:
-            resp = await client.post(url=post_url, json=data, timeout=90)
+            resp = await client.post(url=post_url, json=data)
         except Exception as error:
             return False, error
         info = resp.text

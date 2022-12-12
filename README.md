@@ -4,8 +4,6 @@
 
 *:page_facing_up: 使用本插件前请仔细阅读README文档*
 
-*由于个人原因，本插件将在未来很长一段时间内停止维护*
-
 ## :sparkles: 新版本一览
 ### :pushpin: version 2.8.2
 >都更新了哪些内容？

@@ -5,7 +5,7 @@
 *:page_facing_up: 使用本插件前请仔细阅读README文档*
 
 ## :sparkles: 新版本一览
-### :pushpin: version 2.8.4
+### :pushpin: version 2.8.4.1
 >都更新了哪些内容？
 1. 增加风控提醒
 2. 取消生图时间限制

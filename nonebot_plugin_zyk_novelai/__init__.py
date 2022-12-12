@@ -5,6 +5,7 @@ from nonebot import on_regex, on_fullmatch, get_driver, on_command
 from nonebot.params import CommandArg, RegexGroup, RegexDict
 from nonebot.permission import SUPERUSER
 from nonebot.log import logger
+from nonebot.exception import ActionFailed
 
 from .work import get_data, get_userid, AsyncDownloadFile, random_prompt, search_tags
 from base64 import b64encode, b64decode
@@ -13,7 +14,7 @@ from random import randint
 from colorama import init, Fore
 
 
-__version__ = "2.8.3"
+__version__ = "2.8.4"
 
 
 # 构造响应器
@@ -114,10 +115,14 @@ async def _(msg: Message = CommandArg()):
     tag = str(msg)
     tags = await search_tags(tag, proxies)
 
-    if tags[0] is False:
-        await search_tag.finish("魔咒搜索失败！")
-    else:
-        await search_tag.finish(f"魔咒搜索结果：{tags[1]}")
+    try:
+        if tags[0] is False:
+            await search_tag.finish("魔咒搜索失败！")
+        else:
+            await search_tag.finish(f"魔咒搜索结果：{tags[1]}")
+    except ActionFailed:
+        await search_tag.finish("Bot可能被风控，请稍后再试")
+        logger.error(Fore.LIGHTRED_EX + "Bot可能被风控，请稍后再试")
 
 
 # 普通生图
@@ -211,7 +216,12 @@ async def _(event: MessageEvent, bot: Bot, regex: dict = RegexDict()):
     image = b64decode(data[1])
     msg = Message(f"[CQ:at,qq={id_}]\n{prompt}") + MessageSegment.image(image) if if_randomP == True else Message(f"[CQ:at,qq={id_}]") + MessageSegment.image(image)
     switch = True
-    await process_img.finish(msg)
+
+    try:
+        await process_img.finish(msg)
+    except ActionFailed:
+        await search_tag.finish("Bot可能被风控，请稍后再试")
+        logger.error(Fore.LIGHTRED_EX + "Bot可能被风控，请稍后再试")
 
 
 @img2img.handle()
@@ -336,4 +346,9 @@ async def _(event: MessageEvent, bot: Bot, regex: dict = RegexDict()):
     image = b64decode(data[1])
     msg = Message(f"[CQ:at,qq={id_}]\n{prompt}") + MessageSegment.image(image) if if_randomP == True else Message(f"[CQ:at,qq={id_}]") + MessageSegment.image(image)
     switch = True
-    await img2img.finish(msg)
+
+    try:
+        await img2img.finish(msg)
+    except ActionFailed:
+        await search_tag.finish("Bot可能被风控，请稍后再试")
+        logger.error(Fore.LIGHTRED_EX + "Bot可能被风控，请稍后再试")

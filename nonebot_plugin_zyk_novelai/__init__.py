@@ -14,7 +14,7 @@ from random import randint
 from colorama import init, Fore
 
 
-__version__ = "2.8.4"
+__version__ = "2.8.4.1"
 
 
 # 构造响应器
@@ -220,6 +220,7 @@ async def _(event: MessageEvent, bot: Bot, regex: dict = RegexDict()):
     try:
         await process_img.finish(msg)
     except ActionFailed:
+        switch = True
         await search_tag.finish("Bot可能被风控，请稍后再试")
         logger.error(Fore.LIGHTRED_EX + "Bot可能被风控，请稍后再试")
 
@@ -350,5 +351,6 @@ async def _(event: MessageEvent, bot: Bot, regex: dict = RegexDict()):
     try:
         await img2img.finish(msg)
     except ActionFailed:
+        switch = True
         await search_tag.finish("Bot可能被风控，请稍后再试")
         logger.error(Fore.LIGHTRED_EX + "Bot可能被风控，请稍后再试")

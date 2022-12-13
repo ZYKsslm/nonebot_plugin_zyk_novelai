@@ -5,10 +5,11 @@
 *:page_facing_up: 使用本插件前请仔细阅读README文档*
 
 ## :sparkles: 新版本一览
-### :pushpin: version 2.8.4.1
+### :pushpin: version 2.9
 >都更新了哪些内容？
-1. 增加风控提醒
-2. 取消生图时间限制
+1. 优化信息提示
+2. 修复因网络连接不稳定导致的服务器握手失败BUG
+3. 优化代码结构
 
 ### :chart_with_upwards_trend: 预计未来更新的内容
 1. 添加用户CD冷却时间功能
@@ -102,6 +103,7 @@ ai绘图 | AI绘图 | ai作图 | AI作图 [scale=] [steps=] [size=] [seed=] [pro
 *以图生图和普通模式都可以使用*
 1. 不加*prompt参数*默认使用随机prompt，当然tag个数也将随机
 2. 使用*随机prompt指令参数*指定tag个数
+
    ```
    prompt=RandomP (num)
      

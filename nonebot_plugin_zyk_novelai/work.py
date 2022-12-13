@@ -6,10 +6,10 @@ import sqlite3
 import os
 
 
-async def AsyncDownloadFile(url, proxies=None, timeout=None, headers=None):
+async def AsyncDownloadFile(url, proxies=None, headers=None):
     if headers is None:
         headers = {"User-Agent": UserAgent().random}
-    async with AsyncClient(headers=headers, proxies=proxies, timeout=timeout) as client:
+    async with AsyncClient(headers=headers, proxies=proxies, timeout=None) as client:
         try:
             file = await client.get(url)
         except Exception as error:
@@ -55,7 +55,7 @@ async def search_tags(tag, proxies):
     data = {
         "keyword": tag
     }
-    async with AsyncClient(headers=headers, proxies=proxies) as client:
+    async with AsyncClient(headers=headers, proxies=proxies, timeout=None) as client:
         try:
             res = await client.post(url="https://api.cerfai.com/search_tags", json=data)
         except Exception as error:
@@ -100,7 +100,7 @@ async def get_data(
             }
         )
 
-    async with AsyncClient(headers=headers, proxies=proxies) as client:
+    async with AsyncClient(headers=headers, proxies=proxies, timeout=None) as client:
         try:
             resp = await client.post(url=post_url, json=data)
         except Exception as error:
@@ -108,7 +108,7 @@ async def get_data(
         info = resp.text
 
         # 获取错误
-        if "error" in info:
+        if "data:" not in info:
             return False, info
 
         # 获取返回的图片base64

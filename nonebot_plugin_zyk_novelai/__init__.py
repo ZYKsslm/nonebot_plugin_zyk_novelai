@@ -14,7 +14,7 @@ from random import randint
 from colorama import init, Fore
 
 
-__version__ = "2.8.4.1"
+__version__ = "2.9"
 
 
 # 构造响应器
@@ -111,24 +111,27 @@ async def _(regex: tuple = RegexGroup()):
 
 # 搜索魔咒
 @search_tag.handle()
-async def _(msg: Message = CommandArg()):
+async def _(event: MessageEvent, msg: Message = CommandArg()):
+
+    id_ = get_userid(event)
+
     tag = str(msg)
     tags = await search_tags(tag, proxies)
 
-    try:
-        if tags[0] is False:
-            await search_tag.finish("魔咒搜索失败！")
-        else:
-            await search_tag.finish(f"魔咒搜索结果：{tags[1]}")
-    except ActionFailed:
-        await search_tag.finish("Bot可能被风控，请稍后再试")
-        logger.error(Fore.LIGHTRED_EX + "Bot可能被风控，请稍后再试")
+    if tags[0] is False:
+        await search_tag.finish(Message(f"[CQ:at,qq={id_}]魔咒搜索失败！"))
+    else:
+        await search_tag.finish(Message(f"[CQ:at,qq={id_}]魔咒搜索结果：{tags[1]}"))
 
 
 # 普通生图
 @process_img.handle()
 async def _(event: MessageEvent, bot: Bot, regex: dict = RegexDict()):
     global switch
+
+    # 获取用户ID
+    id_ = get_userid(event)
+
     if switch is False:
         await process_img.finish("资源占用中！")
 
@@ -163,7 +166,7 @@ async def _(event: MessageEvent, bot: Bot, regex: dict = RegexDict()):
                 num = findall(r'RandomP (?P<num>\d+)', prompt)[0]
             except IndexError:
                 switch = True
-                await process_img.finish("请输入随机tag条数！")
+                await process_img.finish(Message(f"[CQ:at,qq={id_}]请输入随机tag条数！"))
             else:
                 prompt = random_prompt(num)
         else:
@@ -185,10 +188,9 @@ async def _(event: MessageEvent, bot: Bot, regex: dict = RegexDict()):
     size = [int(size[0]), int(size[1])]
     if size[0] > 1024 or size[1] > 1024:
         switch = True
-        await process_img.finish("图片尺寸过大，请重新输入！")
+        await process_img.finish(Message(f"[CQ:at,qq={id_}]图片尺寸过大，请重新输入！"))
 
     # 获取用户信息
-    id_ = get_userid(event)
     name = (await bot.get_stranger_info(user_id=int(id_)))["nickname"]
 
     await process_img.send(Message(fr"[CQ:at,qq={id_}]正在生成图片，请稍等..."))
@@ -208,7 +210,7 @@ async def _(event: MessageEvent, bot: Bot, regex: dict = RegexDict()):
     if data[0] is False:
         switch = True
         logger.error(Fore.LIGHTRED_EX + f"后端请求失败:{data[1]}")
-        await process_img.finish(f"{name}的图片生成失败")
+        await process_img.finish(Message(f"[CQ:at,qq={id_}]生成失败"))
 
     logger.success(Fore.LIGHTGREEN_EX + f"{name}的图片生成成功")
 
@@ -221,13 +223,16 @@ async def _(event: MessageEvent, bot: Bot, regex: dict = RegexDict()):
         await process_img.finish(msg)
     except ActionFailed:
         switch = True
-        await search_tag.finish("Bot可能被风控，请稍后再试")
-        logger.error(Fore.LIGHTRED_EX + "Bot可能被风控，请稍后再试")
+        logger.warning(Fore.LIGHTYELLOW_EX + "Bot可能被风控，请稍后再试")
+        await search_tag.finish(Message(f"[CQ:at,qq={id_}]Bot可能被风控，请稍后再试"))
 
 
 @img2img.handle()
 async def _(event: MessageEvent, bot: Bot, regex: dict = RegexDict()):
     global switch
+
+    id_ = get_userid(event)
+
     if switch is False:
         await process_img.finish("资源占用中！")
 
@@ -245,14 +250,14 @@ async def _(event: MessageEvent, bot: Bot, regex: dict = RegexDict()):
     else:
         if float(strength) > 0.99:
             switch = True
-            await img2img.finish("strength过大！（不能超过0.99）")
+            await img2img.finish(Message(f"[CQ:at,qq={id_}]strength过大！（不能超过0.99）"))
 
     if noise is None:
         noise = 0.2
     else:
         if float(noise) > 0.99:
             switch = True
-            await img2img.finish("noise过大！（不能超过0.99）")
+            await img2img.finish(Message(f"[CQ:at,qq={id_}]noise过大！（不能超过0.99）"))
 
     if seed is None:
         seed = randint(0, pow(2, 32))
@@ -269,7 +274,7 @@ async def _(event: MessageEvent, bot: Bot, regex: dict = RegexDict()):
     size = [int(size[0]), int(size[1])]
     if size[0] > 1024 or size[1] > 1024:
         switch = True
-        await img2img.finish("图片尺寸过大，请重新输入")
+        await img2img.finish(Message(f"[CQ:at,qq={id_}]图片尺寸过大，请重新输入"))
 
     if prompt is None:
         if_randomP = True
@@ -287,7 +292,7 @@ async def _(event: MessageEvent, bot: Bot, regex: dict = RegexDict()):
                 num = findall(r'RandomP (?P<num>\d+)', prompt)[0]
             except IndexError:
                 switch = True
-                await process_img.finish("请输入随机tag条数！")
+                await process_img.finish(Message(f"[CQ:at,qq={id_}]请输入随机tag条数！"))
             else:
                 prompt = random_prompt(num)
         else:
@@ -301,15 +306,12 @@ async def _(event: MessageEvent, bot: Bot, regex: dict = RegexDict()):
             if if_randomP is False:
                 prompt = findall(r'(?P<prompt>.+) uc', prompt)[0]
 
-    # 获取用户ID
-    id_ = get_userid(event)
-
     switch = False
     await img2img.send(Message(f"[CQ:at,qq={id_}]正在获取图片"))
     name = (await bot.get_stranger_info(user_id=int(id_)))["nickname"]
     logger.info(Fore.LIGHTYELLOW_EX + f"开始获取{name}发送的图片")
     # 下载用户发的图片
-    img_data = await AsyncDownloadFile(url=img_url, proxies=proxies, timeout=5)
+    img_data = await AsyncDownloadFile(url=img_url, proxies=proxies)
 
     if img_data[0] is False:
         switch = True
@@ -320,7 +322,7 @@ async def _(event: MessageEvent, bot: Bot, regex: dict = RegexDict()):
 
     await img2img.send(Message(fr"[CQ:at,qq={id_}]正在生成图片，请稍等..."))
 
-    # 先把bytes转成base64，再给base64编码
+    # 先把bytes转成base64，再用utf-8编码
     img = b64encode(img_data[1]).decode("utf-8")
     mode = "以图生图"
     switch = False
@@ -340,7 +342,7 @@ async def _(event: MessageEvent, bot: Bot, regex: dict = RegexDict()):
     if data[0] is False:
         switch = True
         logger.error(Fore.LIGHTRED_EX + f"后端请求失败:{data[1]}")
-        await img2img.finish(f"生成失败")
+        await img2img.finish(Message(f"[CQ:at,qq={id_}]生成失败"))
 
     logger.success(Fore.LIGHTGREEN_EX + f"{name}的图片生成成功")
 
@@ -352,5 +354,5 @@ async def _(event: MessageEvent, bot: Bot, regex: dict = RegexDict()):
         await img2img.finish(msg)
     except ActionFailed:
         switch = True
-        await search_tag.finish("Bot可能被风控，请稍后再试")
-        logger.error(Fore.LIGHTRED_EX + "Bot可能被风控，请稍后再试")
+        logger.warning(Fore.LIGHTYELLOW_EX + "Bot可能被风控，请稍后再试")
+        await search_tag.finish(Message(f"Bot可能被风控，请稍后再试"))

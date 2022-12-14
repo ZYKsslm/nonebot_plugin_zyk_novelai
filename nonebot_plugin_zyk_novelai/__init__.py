@@ -14,7 +14,7 @@ from random import randint
 from colorama import init, Fore
 
 
-__version__ = "2.9"
+__version__ = "2.9.1"
 
 
 # 构造响应器
@@ -28,7 +28,6 @@ process_img = on_regex(pattern=pattern, permission=GROUP | PRIVATE_FRIEND, prior
 # 以图生图正则
 img2img_pattern = r'^(img2img|以图生图).*?url=(?P<url>.*);.*?\](.*?strength=(?P<strength>\d\.\d))?(.*?noise=(?P<noise>\d\.\d))?(.*?scale=(?P<scale>\d+))?(.*?size=(?P<size>\d+x\d+))?(.*?seed=(?P<seed>\d+))?(.*?prompt=(?P<prompt>.+))?'
 img2img = on_regex(pattern=img2img_pattern, flags=S, permission=GROUP | PRIVATE_FRIEND, priority=10, block=True)
-
 
 # 获取全局配置
 try:
@@ -112,7 +111,6 @@ async def _(regex: tuple = RegexGroup()):
 # 搜索魔咒
 @search_tag.handle()
 async def _(event: MessageEvent, msg: Message = CommandArg()):
-
     id_ = get_userid(event)
 
     tag = str(msg)
@@ -205,7 +203,8 @@ async def _(event: MessageEvent, bot: Bot, regex: dict = RegexDict()):
         f"\nnegative prompt={uc}"
     )
     switch = False
-    data = await get_data(post_url=post_url, size=size, prompt=prompt, proxies=proxies, uc=uc, steps=steps, scale=scale, seed=seed)
+    data = await get_data(post_url=post_url, size=size, prompt=prompt, proxies=proxies, uc=uc, steps=steps, scale=scale,
+                          seed=seed)
 
     if data[0] is False:
         switch = True
@@ -216,7 +215,8 @@ async def _(event: MessageEvent, bot: Bot, regex: dict = RegexDict()):
 
     # 把base64字符串转成bytes
     image = b64decode(data[1])
-    msg = Message(f"[CQ:at,qq={id_}]\n{prompt}") + MessageSegment.image(image) if if_randomP == True else Message(f"[CQ:at,qq={id_}]") + MessageSegment.image(image)
+    msg = Message(f"[CQ:at,qq={id_}]\n{prompt}") + MessageSegment.image(image) if if_randomP == True else Message(
+        f"[CQ:at,qq={id_}]") + MessageSegment.image(image)
     switch = True
 
     try:
@@ -329,8 +329,10 @@ async def _(event: MessageEvent, bot: Bot, regex: dict = RegexDict()):
     logger.info(
         Fore.LIGHTYELLOW_EX +
         f"\n开始生成{name}的图片："
+        f"\nstrength={strength}"
+        f"\nnoise={noise}"
         f"\nscale={scale}"
-        f"\nsteps={50}"
+        "\nsteps=50"
         f"\nsize={size[0]},{size[1]}"
         f"\nseed={seed}"
         f"\nprompt={prompt}"
@@ -347,7 +349,8 @@ async def _(event: MessageEvent, bot: Bot, regex: dict = RegexDict()):
     logger.success(Fore.LIGHTGREEN_EX + f"{name}的图片生成成功")
 
     image = b64decode(data[1])
-    msg = Message(f"[CQ:at,qq={id_}]\n{prompt}") + MessageSegment.image(image) if if_randomP == True else Message(f"[CQ:at,qq={id_}]") + MessageSegment.image(image)
+    msg = Message(f"[CQ:at,qq={id_}]\n{prompt}") + MessageSegment.image(image) if if_randomP == True else Message(
+        f"[CQ:at,qq={id_}]") + MessageSegment.image(image)
     switch = True
 
     try:

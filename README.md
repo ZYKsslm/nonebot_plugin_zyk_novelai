@@ -1,6 +1,6 @@
 # :memo: nonebot_plugin_zyk_novelai
 
-*本插件基于4chan魔改版NovelAILeaks(naifu)的Colab端配置制作*
+*本插件基于Naifu端配置制作*
 
 *:page_facing_up: 使用本插件前请仔细阅读README文档*
 
@@ -33,7 +33,7 @@ nb plugin install nonebot_plugin_zyk_novelai
 >**因为我PYPI版本提交的问题，所以安装过老版本的需要删除后重新下一遍，不然无法安装最新版**
 
 ## :rocket: 配置后端（Colab部署）
-1. 后端配置地址：[配置后端](https://colab.research.google.com/drive/1_Ma71L6uGbtt6UQyA3FjqW2lcZ5Bjck-)
+1. 使用4chan魔改版NovelAILeaks(naifu)的Colab后端：[配置后端](https://colab.research.google.com/drive/1_Ma71L6uGbtt6UQyA3FjqW2lcZ5Bjck-)
    - 配置需要**科学上网**（大陆无法访问Colab）和**谷歌账户**
 
 2. 请按照要求配置好后在**env**中填写生成的URL或*使用指令发送给机器人*
@@ -180,6 +180,10 @@ ai绘图 | AI绘图 | ai作图 | AI作图 [scale=] [steps=] [size=] [seed=] [pro
 ![查看本地代理端口](port.png)
 
 其中的**端口**即你的本地代理端口
+
+>如何书写prompt？
+
+[Naifu魔咒咏唱：从入门到入土](https://github.com/ZYKsslm/Summoning-Magic-of-Naifu)
 
 ---
 :bug: 如果发现插件有BUG或有建议，欢迎**合理**提*Issue*

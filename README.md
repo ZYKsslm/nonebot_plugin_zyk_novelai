@@ -181,7 +181,7 @@ ai绘图 | AI绘图 | ai作图 | AI作图 [scale=] [steps=] [size=] [seed=] [pro
 
 其中的**端口**即你的本地代理端口
 
->如何书写prompt？
+>Naifu的正确食用姿势
 
 [Naifu魔咒咏唱：从入门到入土](https://github.com/ZYKsslm/Summoning-Magic-of-Naifu)
 

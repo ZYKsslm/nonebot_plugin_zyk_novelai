@@ -14,13 +14,14 @@ from random import randint
 from colorama import init, Fore
 
 
-__version__ = "2.9.1"
+__version__ = "2.9.2.1"
 
 
 # 构造响应器
 check_state = on_fullmatch(msg="check state", permission=SUPERUSER, priority=5, block=True)
 set_port = on_regex(pattern=r'set_port:(?P<port>.*)', permission=SUPERUSER, priority=5, block=True)
 set_url = on_regex(pattern=r'set_url:(?P<url>.*/)', permission=SUPERUSER, priority=5, block=True)
+set_time = on_regex(pattern=r'set_time:(?P<time>.*)', permission=SUPERUSER, priority=5, block=True)
 search_tag = on_command(cmd="补魔", aliases={"召唤魔咒", "搜索魔咒"}, permission=SUPERUSER, priority=5, block=True)
 # 普通生图正则
 pattern = r'^(?P<mode>ai绘图|AI绘图|ai作图|AI作图)( scale=(?P<scale>\d+))?( steps=(?P<steps>\d+))?( size=(?P<size>\d+x\d+))?( seed=(?P<seed>\d+))?( prompt=(?P<prompt>.+))?'
@@ -33,11 +34,13 @@ img2img = on_regex(pattern=img2img_pattern, flags=S, permission=GROUP | PRIVATE_
 try:
     port = get_driver().config.novelai_proxy_port
     post_url = str(get_driver().config.novelai_post_url) + "generate-stream"
+    img_time = get_driver().config.img_time
 except AttributeError:
     logger.warning(Fore.LIGHTYELLOW_EX + "缺少env配置项！")
     proxies = None
     port = "None"
     post_url = ""
+    img_time = None
 else:
     if port == "None":
         proxies = None
@@ -53,6 +56,15 @@ else:
                 "https://": f"http://127.0.0.1:{port}"
             }
 
+    if img_time == "None":
+        img_time = None
+    else:
+        try:
+            img_time = int(img_time)
+        except ValueError:
+            logger.warning(Fore.LIGHTYELLOW_EX + "img_time配置项格式错误！")
+            img_time = None
+
 # 初始化一个全局变量，记录bot的状态（控制bot只能同时接受并处理一次请求）
 switch = True
 
@@ -65,8 +77,31 @@ logger.success(Fore.LIGHTGREEN_EX + f"成功导入本插件，插件版本为{__
 # 查看后端状态信息
 @check_state.handle()
 async def _():
-    await check_state.send(f"当前后端URL为：{post_url}，本地代理端口号为：{port}")
-    logger.info(Fore.LIGHTCYAN_EX + f"当前后端URL为：{post_url}，本地代理端口号为：{port}")
+    await check_state.send(f"当前后端URL为：{post_url}，本地代理端口号为：{port}，生图时间限制为：{img_time}")
+    logger.info(Fore.LIGHTCYAN_EX + f"当前后端URL为：{post_url}，本地代理端口号为：{port}，生图时间限制为：{img_time}")
+
+
+@set_time.handle()
+async def _(regex: tuple = RegexGroup()):
+    global img_time
+    time = regex[0]
+
+    # 判断是否为数字
+    try:
+        time = int(time)
+    except ValueError:
+        # 无限制
+        if time == "None":
+            img_time = None
+            logger.success(Fore.LIGHTCYAN_EX + "成功取消生图时间限制")
+            await set_time.finish("成功取消生图时间限制")
+        else:
+            await set_time.finish("请输入有效参数！")
+    else:
+        img_time = time
+        logger.success(Fore.LIGHTCYAN_EX + f"当前生图时间限制：{img_time}")
+
+        await set_time.finish("生图时间限制设置成功，设置将在下一次请求时启用")
 
 
 # 设置本地端口
@@ -203,7 +238,7 @@ async def _(event: MessageEvent, bot: Bot, regex: dict = RegexDict()):
         f"\nnegative prompt={uc}"
     )
     switch = False
-    data = await get_data(post_url=post_url, size=size, prompt=prompt, proxies=proxies, uc=uc, steps=steps, scale=scale,
+    data = await get_data(post_url=post_url, size=size, prompt=prompt, proxies=proxies, timeout=img_time, uc=uc, steps=steps, scale=scale,
                           seed=seed)
 
     if data[0] is False:
@@ -338,13 +373,13 @@ async def _(event: MessageEvent, bot: Bot, regex: dict = RegexDict()):
         f"\nprompt={prompt}"
         f"\nnegative prompt={uc}"
     )
-    data = await get_data(post_url=post_url, size=size, prompt=prompt, proxies=proxies, img=img, mode=mode,
+    data = await get_data(post_url=post_url, size=size, prompt=prompt, proxies=proxies, timeout=img_time, img=img, mode=mode,
                           strength=strength, noise=noise, scale=scale, steps=50, seed=seed, uc=uc)
 
     if data[0] is False:
         switch = True
         logger.error(Fore.LIGHTRED_EX + f"后端请求失败:{data[1]}")
-        await img2img.finish(Message(f"[CQ:at,qq={id_}]生成失败"))
+        await img2img.finish(Message(f"[CQ:at,qq={id_}]生成失败：{data[1]}"))
 
     logger.success(Fore.LIGHTGREEN_EX + f"{name}的图片生成成功")
 

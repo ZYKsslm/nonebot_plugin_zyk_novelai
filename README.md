@@ -5,19 +5,15 @@
 *:page_facing_up: 使用本插件前请仔细阅读README文档*
 
 ## :sparkles: 新版本一览
-### :pushpin: version 2.9
+### :pushpin: version 2.9.2
 >都更新了哪些内容？
-1. 优化信息提示
-2. 修复因网络连接不稳定导致的服务器握手失败BUG
-3. 优化代码结构
+1. 以图生图不加size参数自动选择尺寸
+2. 添加生图时间自定义功能
 
 ### :chart_with_upwards_trend: 预计未来更新的内容
 1. 添加用户CD冷却时间功能
-2. 添加生图时间限制自定义功能
 3. 添加消息撤回功能
-4. 添加图片可自动保存至本地功能
-5. 添加以图生图自动获取图片尺寸功能
-6. 更新tag数据库
+4. 更新tag数据库
 
 
 ## 安装方式
@@ -41,10 +37,14 @@ nb plugin install nonebot_plugin_zyk_novelai
 
    ![image](url.png)
 
-3. 如果使用代理请在**env**中填写代理使用的的本地代理端口*或使用指令发送给机器人*，并确保开着代理，不然可能请求异常 *（报EOF相关的错误）*
+3. 发送请求报错：（报EOF相关的错误）
+   - 请在**env**中填写代理使用的的本地代理端口*或使用指令发送给机器人*，并确保开着代理
 
-4. Colab端无法配置问题
-   - 普通谷歌账户使用Colab会有GPU使用时限，想要解决除了付费购买或多开几个谷歌账户就只能碰运气等一段时间，还有一种办法就是使用本地版的naifu，不过你需要有NVIDIA显卡
+5. Colab端无法配置：普通谷歌账户使用Colab会有GPU使用时限。解决方法：
+   - 等一段时间，一般半天或一天就会恢复使用
+   - 多开几个谷歌账户轮流使用，重复步骤一
+   - 付费购买或订阅
+   - 使用本地版Naifu，需要NVIDIA显卡
 
    ![image](colab.png)
 
@@ -54,6 +54,7 @@ nb plugin install nonebot_plugin_zyk_novelai
 |:------------------:|:---------------------------------------------:|:----------:|:------:|
 |  novelai_post_url  | `https://THIS-IS-A-SAMPLE.trycloudflare.com/` |    str     | 后端URL  |
 | novelai_proxy_port |                     10809                     | int or str | 本地代理端口 |
+|      img_time      |                      20                       | int or str | 生图时间限制 |
 
 ## :label: 指令
 
@@ -87,6 +88,24 @@ set_port:None
 或直接在env配置文件中填写
 ```
 novelai_proxy_port=None
+```
+**注意，None开头为大写**
+
+### 设置生图时间限制
+```
+set_time:20
+```
+或直接在env配置文件中填写
+```
+img_time=20
+```
+- #### *无限制模式*
+```
+img_time:None
+```
+或直接在env配置文件中填写
+```
+img_time=None
 ```
 **注意，None开头为大写**
 
@@ -147,7 +166,7 @@ ai绘图 | AI绘图 | ai作图 | AI作图 [scale=] [steps=] [size=] [seed=] [pro
 - [x] prompt *（可选）* 默认**随机**
 
 以图生图指令支持参数：
-- [x] size *（可选）* 默认**512x768**
+- [x] size *（可选）* 默认**按原图尺寸匹配**
 - [x] strength *（可选）* 默认**0.7**
 - [x] noise *（可选）* 默认**0.2**
 - [x] scale *（可选）* 默认**12**

@@ -54,7 +54,7 @@ nb plugin install nonebot_plugin_zyk_novelai
 |:------------------:|:---------------------------------------------:|:----------:|:------:|
 |  novelai_post_url  | `https://THIS-IS-A-SAMPLE.trycloudflare.com/` |    str     | 后端URL  |
 | novelai_proxy_port |                     10809                     | int or str | 本地代理端口 |
-|      img_time      |                      20                       | int or str | 生图时间限制 |
+|  novelai_img_time  |                      20                       | int or str | 生图时间限制 |
 
 ## :label: 指令
 

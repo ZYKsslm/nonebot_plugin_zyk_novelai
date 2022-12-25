@@ -14,7 +14,7 @@ from random import randint
 from colorama import init, Fore
 
 
-__version__ = "2.9.2.1"
+__version__ = "2.9.3"
 
 
 # 构造响应器
@@ -34,7 +34,7 @@ img2img = on_regex(pattern=img2img_pattern, flags=S, permission=GROUP | PRIVATE_
 try:
     port = get_driver().config.novelai_proxy_port
     post_url = str(get_driver().config.novelai_post_url) + "generate-stream"
-    img_time = get_driver().config.img_time
+    img_time = get_driver().config.novelai_img_time
 except AttributeError:
     logger.warning(Fore.LIGHTYELLOW_EX + "缺少env配置项！")
     proxies = None
@@ -62,7 +62,7 @@ else:
         try:
             img_time = int(img_time)
         except ValueError:
-            logger.warning(Fore.LIGHTYELLOW_EX + "img_time配置项格式错误！")
+            logger.warning(Fore.LIGHTYELLOW_EX + "novelai_img_time配置项格式错误！")
             img_time = None
 
 # 初始化一个全局变量，记录bot的状态（控制bot只能同时接受并处理一次请求）

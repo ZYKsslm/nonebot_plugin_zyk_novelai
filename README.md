@@ -97,15 +97,15 @@ set_time:20
 ```
 或直接在env配置文件中填写
 ```
-img_time=20
+novelai_img_time=20
 ```
 - #### *无限制模式*
 ```
-img_time:None
+set_time:None
 ```
 或直接在env配置文件中填写
 ```
-img_time=None
+novelai_img_time=None
 ```
 **注意，None开头为大写**
 

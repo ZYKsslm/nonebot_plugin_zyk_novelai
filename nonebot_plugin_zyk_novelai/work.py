@@ -175,6 +175,8 @@ async def get_data(
             resp = await client.post(url=post_url, json=data)
         except ConnectTimeout:
             return False, "时间超过限制！"
+        except Exception as error:
+            return False, error
         info = resp.text
 
         # 获取错误

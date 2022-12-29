@@ -5,15 +5,13 @@
 *:page_facing_up: 使用本插件前请仔细阅读README文档*
 
 ## :sparkles: 新版本一览
-### :pushpin: version 2.9.2
+### :pushpin: version 2.9.4
 >都更新了哪些内容？
-1. 以图生图不加size参数自动选择尺寸
-2. 添加生图时间自定义功能
+1. 添加消息撤回功能，仅可在env配置文件中设置
 
 ### :chart_with_upwards_trend: 预计未来更新的内容
 1. 添加用户CD冷却时间功能
-3. 添加消息撤回功能
-4. 更新tag数据库
+2. 更新tag数据库
 
 
 ## 安装方式
@@ -50,12 +48,12 @@ nb plugin install nonebot_plugin_zyk_novelai
 
 ## :wrench: env配置
 
-|        Name        |                    Example                    |    Type    | Usage  |
-|:------------------:|:---------------------------------------------:|:----------:|:------:|
-|  novelai_post_url  | `https://THIS-IS-A-SAMPLE.trycloudflare.com/` |    str     | 后端URL  |
-| novelai_proxy_port |                     10809                     | int or str | 本地代理端口 |
-|  novelai_img_time  |                      20                       | int or str | 生图时间限制 |
-
+|         Name          |                    Example                    |    Type     | Usage  |
+|:---------------------:|:---------------------------------------------:|:-----------:|:------:|
+|   novelai_post_url    | `https://THIS-IS-A-SAMPLE.trycloudflare.com/` |     str     | 后端URL  |
+|  novelai_proxy_port   |                     10809                     | int or None | 本地代理端口 |
+|   novelai_img_time    |                      20                       | int or None | 生图时间限制 |
+| novelai_withdraw_time |                      20                       | int or None |  撤回时间  |
 ## :label: 指令
 
 ### 查看当前配置信息

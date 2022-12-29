@@ -9,12 +9,13 @@ from nonebot.exception import ActionFailed
 
 from .work import get_data, get_userid, AsyncDownloadFile, random_prompt, search_tags
 from base64 import b64encode, b64decode
+from asyncio import sleep
 from re import findall, S
 from random import randint
 from colorama import init, Fore
 
 
-__version__ = "2.9.3"
+__version__ = "2.9.4"
 
 
 # 构造响应器
@@ -32,15 +33,17 @@ img2img = on_regex(pattern=img2img_pattern, flags=S, permission=GROUP | PRIVATE_
 
 # 获取全局配置
 try:
+    withdraw_time = get_driver().config.novelai_withdraw_time
     port = get_driver().config.novelai_proxy_port
     post_url = str(get_driver().config.novelai_post_url) + "generate-stream"
     img_time = get_driver().config.novelai_img_time
 except AttributeError:
-    logger.warning(Fore.LIGHTYELLOW_EX + "缺少env配置项！")
+    logger.warning(Fore.LIGHTYELLOW_EX + "缺少env配置项，缺少项将使用默认配置！")
     proxies = None
     port = "None"
     post_url = ""
     img_time = None
+    withdraw_time = None
 else:
     if port == "None":
         proxies = None
@@ -65,7 +68,16 @@ else:
             logger.warning(Fore.LIGHTYELLOW_EX + "novelai_img_time配置项格式错误！")
             img_time = None
 
-# 初始化一个全局变量，记录bot的状态（控制bot只能同时接受并处理一次请求）
+    if withdraw_time == "None":
+        withdraw_time = None
+    else:
+        try:
+            withdraw_time = float(withdraw_time)
+        except ValueError:
+            logger.warning(Fore.LIGHTYELLOW_EX + "novelai_withdraw_time配置项格式错误！")
+            withdraw_time = None
+
+# 初始化一个全局变量，记录bot的状态（控制bot只能同时接受并处理一次生图请求）
 switch = True
 
 # 初始化字体样式（自动重置字体样式）
@@ -77,10 +89,11 @@ logger.success(Fore.LIGHTGREEN_EX + f"成功导入本插件，插件版本为{__
 # 查看后端状态信息
 @check_state.handle()
 async def _():
-    await check_state.send(f"当前后端URL为：{post_url}，本地代理端口号为：{port}，生图时间限制为：{img_time}")
-    logger.info(Fore.LIGHTCYAN_EX + f"当前后端URL为：{post_url}，本地代理端口号为：{port}，生图时间限制为：{img_time}")
+    await check_state.send(f"当前后端URL为：{post_url}，本地代理端口号为：{port}，生图时间限制为：{img_time}，撤回时间为{withdraw_time}")
+    logger.info(Fore.LIGHTCYAN_EX + f"当前后端URL为：{post_url}，本地代理端口号为：{port}，生图时间限制为：{img_time}，撤回时间为{withdraw_time}")
 
 
+# 设置生图时间限制
 @set_time.handle()
 async def _(regex: tuple = RegexGroup()):
     global img_time
@@ -104,7 +117,7 @@ async def _(regex: tuple = RegexGroup()):
         await set_time.finish("生图时间限制设置成功，设置将在下一次请求时启用")
 
 
-# 设置本地端口
+# 设置本地代理端口
 @set_port.handle()
 async def _(regex: tuple = RegexGroup()):
     global port, proxies
@@ -161,13 +174,13 @@ async def _(event: MessageEvent, msg: Message = CommandArg()):
 @process_img.handle()
 async def _(event: MessageEvent, bot: Bot, regex: dict = RegexDict()):
     global switch
+    if switch is False:
+        await process_img.finish("资源占用中！")
 
     # 获取用户ID
     id_ = get_userid(event)
 
-    if switch is False:
-        await process_img.finish("资源占用中！")
-
+    # 生图参数
     seed = regex["seed"]
     scale = regex["scale"]
     steps = regex["steps"]
@@ -183,6 +196,8 @@ async def _(event: MessageEvent, bot: Bot, regex: dict = RegexDict()):
         steps = 28
     if size is None:
         size = "512x768"
+
+    # 这一段写得很乱，prompt和uc合起来了，要再分一次
     if prompt is None:
         if_randomP = True
         num = randint(0, 1000)
@@ -223,7 +238,7 @@ async def _(event: MessageEvent, bot: Bot, regex: dict = RegexDict()):
         switch = True
         await process_img.finish(Message(f"[CQ:at,qq={id_}]图片尺寸过大，请重新输入！"))
 
-    # 获取用户信息
+    # 获取用户名
     name = (await bot.get_stranger_info(user_id=int(id_)))["nickname"]
 
     await process_img.send(Message(fr"[CQ:at,qq={id_}]正在生成图片，请稍等..."))
@@ -255,21 +270,25 @@ async def _(event: MessageEvent, bot: Bot, regex: dict = RegexDict()):
     switch = True
 
     try:
-        await process_img.finish(msg)
+        msg_id = (await process_img.send(msg))["message_id"]
     except ActionFailed:
         switch = True
         logger.warning(Fore.LIGHTYELLOW_EX + "Bot可能被风控，请稍后再试")
         await search_tag.finish(Message(f"[CQ:at,qq={id_}]Bot可能被风控，请稍后再试"))
+    else:
+        if withdraw_time is not None:
+            await sleep(withdraw_time)
+            await bot.delete_msg(message_id=msg_id)
 
 
+# 以图生图
 @img2img.handle()
 async def _(event: MessageEvent, bot: Bot, regex: dict = RegexDict()):
     global switch
-
-    id_ = get_userid(event)
-
     if switch is False:
         await process_img.finish("资源占用中！")
+
+    id_ = get_userid(event)
 
     img_url = regex["url"]
     strength = regex["strength"]
@@ -389,8 +408,12 @@ async def _(event: MessageEvent, bot: Bot, regex: dict = RegexDict()):
     switch = True
 
     try:
-        await img2img.finish(msg)
+        msg_id = (await img2img.send(msg))["message_id"]
     except ActionFailed:
         switch = True
         logger.warning(Fore.LIGHTYELLOW_EX + "Bot可能被风控，请稍后再试")
         await search_tag.finish(Message(f"Bot可能被风控，请稍后再试"))
+    else:
+        if withdraw_time is not None:
+            await sleep(withdraw_time)
+            await bot.delete_msg(message_id=msg_id)

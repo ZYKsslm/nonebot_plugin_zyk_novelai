@@ -49,7 +49,7 @@ nb plugin install nonebot_plugin_zyk_novelai
 
 ## :wrench: env配置
 
-|         Name          |                    Example                    | Type |       Usage        | required |
+|         Name          |                    Example                    | Type |       Usage        | Required |
 |:---------------------:|:---------------------------------------------:|:----:|:------------------:|:--------:|
 |   novelai_post_url    | `https://THIS-IS-A-SAMPLE.trycloudflare.com/` | str  |       后端URL        |    No    |
 |  novelai_proxy_port   |                     10809                     | int  |       本地代理端口       |    No    |

@@ -20,18 +20,6 @@ async def AsyncDownloadFile(url, proxies=None, headers=None):
             return True, file.content
 
 
-def get_userid(event):
-    info = str(event.get_session_id())
-    try:
-        res = findall(r"group_(?P<group_id>\d+)_(?P<member_id>\d+)", info)[0]
-    except IndexError:
-        id_ = info
-    else:
-        id_ = res[1]
-
-    return id_
-
-
 def random_prompt(order):
     num = int(order)
     db_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "resource", "novelai_tags.db")
@@ -71,7 +59,7 @@ async def search_tags(tag, proxies):
 
 
 def set_size(image):
-    # 人类的本质就是复读机，这段代码写得真辣鸡，应该可以用个什么算法吧，但是我懒
+    # 人类的本质就是复读机，这里应该可以用个什么算法，但是我太懒了
     img = Image.open(BytesIO(image))
     width, height = img.size
 
@@ -105,28 +93,11 @@ def set_size(image):
         else:
             width = 768
 
-    if height == 512 or height < 512:
-        height = 512
-    elif height == 640:
-        pass
-    elif height == 768:
-        pass
+    if height <= 768:
+        # 高为768的图片生成效果最好，高为512则很容易生异形
+        height = 768
     elif height == 1024 or height > 1024:
         height = 1024
-    elif 512 < height < 640:
-        height1 = height - 512
-        height2 = abs(height - 640)
-        if height1 > height2:
-            height = 640
-        else:
-            height = 512
-    elif 640 < height < 768:
-        height1 = height - 640
-        height2 = abs(height - 768)
-        if height1 > height2:
-            height = 768
-        else:
-            height = 640
     elif 768 < height < 1024:
         height1 = height - 768
         height2 = abs(height - 1024)

@@ -5,13 +5,16 @@
 *:page_facing_up: 使用本插件前请仔细阅读README文档*
 
 ## :sparkles: 新版本一览
-### :pushpin: version 2.9.4
+### :pushpin: version 2.9.5
 >都更新了哪些内容？
-1. 添加消息撤回功能，仅可在env配置文件中设置
+1. 添加CD功能，CD时间可在env文件中配置。超级用户不受限，白名单用户不受限
+2. 添加黑名单和白名单，黑名单用户无法使用生图功能，白名单用户无CD限制，可在env文件中配置
+3. 移除 *set_port*，*set_time* 事件响应器（即本地代理端口和生图时间限制仅可在env文件中配置）
+4. *check state* 事件响应器更改为命令事件响应器
+5. 优化加载全局配置
 
 ### :chart_with_upwards_trend: 预计未来更新的内容
-1. 添加用户CD冷却时间功能
-2. 更新tag数据库
+1. 更新tag数据库
 
 
 ## 安装方式
@@ -48,17 +51,24 @@ nb plugin install nonebot_plugin_zyk_novelai
 
 ## :wrench: env配置
 
-|         Name          |                    Example                    |    Type     | Usage  |
-|:---------------------:|:---------------------------------------------:|:-----------:|:------:|
-|   novelai_post_url    | `https://THIS-IS-A-SAMPLE.trycloudflare.com/` |     str     | 后端URL  |
-|  novelai_proxy_port   |                     10809                     | int or None | 本地代理端口 |
-|   novelai_img_time    |                      20                       | int or None | 生图时间限制 |
-| novelai_withdraw_time |                      20                       | int or None |  撤回时间  |
+|         Name          |                    Example                    | Type |       Usage        | required |
+|:---------------------:|:---------------------------------------------:|:----:|:------------------:|:--------:|
+|   novelai_post_url    | `https://THIS-IS-A-SAMPLE.trycloudflare.com/` | str  |       后端URL        |    No    |
+|  novelai_proxy_port   |                     10809                     | int  |       本地代理端口       |    No    |
+|   novelai_img_time    |                      30                       | int  |       生图时间限制       |    No    |
+| novelai_withdraw_time |                      20                       | int  |        撤回时间        |    No    |
+|    novelai_cd_time    |                      10                       | int  |        CD时间        |    No    |
+|  novelai_white_list   |                `[1234567890]`                 | list |     白名单，无CD限制      |    No    |
+|  novelai_black_list   |                `[1234567890]`                 | list |    黑名单，无法使用生图功能    |    No    |
+
 ## :label: 指令
 
 ### 查看当前配置信息
 ```
-check state
+(COMMAND_START)check state
+
+eg:
+   /check state
 ```
 
 ### 设置后端URL
@@ -70,48 +80,11 @@ set_url:https://THIS-IS-A-SAMPLE.trycloudflare.com/
 novelai_post_url=https://THIS-IS-A-SAMPLE.trycloudflare.com/
 ```
 
-### 设置本地代理端口
-```
-set_port:10809
-```
-或直接在env配置文件中填写
-```
-novelai_proxy_port=10809
-```
-
-- #### *无代理模式*
-```
-set_port:None
-```
-或直接在env配置文件中填写
-```
-novelai_proxy_port=None
-```
-**注意，None开头为大写**
-
-### 设置生图时间限制
-```
-set_time:20
-```
-或直接在env配置文件中填写
-```
-novelai_img_time=20
-```
-- #### *无限制模式*
-```
-set_time:None
-```
-或直接在env配置文件中填写
-```
-novelai_img_time=None
-```
-**注意，None开头为大写**
-
 ### 普通绘图
 ```
 ai绘图 | AI绘图 | ai作图 | AI作图 [scale=] [steps=] [size=] [seed=] [prompt=] [uc=]
 
-例：
+eg：
    ai绘图 steps=50 prompt={masterpiece}, best quality, {1 girl with black long hair and {{red light eyes}} wearing white dress and white leggings}, {loli:2}, full body, {sitting in sofa}, {looking at viewer} AND {dislike and void}, dark background
 ```
 
@@ -124,7 +97,7 @@ ai绘图 | AI绘图 | ai作图 | AI作图 [scale=] [steps=] [size=] [seed=] [pro
    ```
    prompt=RandomP (num)
      
-   例：
+   eg：
       prompt=RandomP 30
    ```
 
@@ -134,7 +107,7 @@ ai绘图 | AI绘图 | ai作图 | AI作图 [scale=] [steps=] [size=] [seed=] [pro
 ```
 以图生图 | img2img (your image) [strength=] [noise=] [scale=] [size=] [seed=] [prompt=] [uc=]
 
-例：
+eg：
    img2img (an image) strength=0.5 noise=0.4 size=1024x512
 ```
 
@@ -148,7 +121,7 @@ ai绘图 | AI绘图 | ai作图 | AI作图 [scale=] [steps=] [size=] [seed=] [pro
 ```
 (COMMAND_START)补魔 | 召唤魔咒 | 搜索魔咒 中文名
 
-例：
+eg：
    /补魔 黑发
 ```
 

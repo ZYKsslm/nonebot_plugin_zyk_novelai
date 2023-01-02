@@ -26,22 +26,20 @@ pip install nonebot_plugin_zyk_novelai
 ```
 nb plugin install nonebot_plugin_zyk_novelai
 ```
-:ambulance: :beer:
->**因为我PYPI版本提交的问题，所以安装过老版本的需要删除后重新下一遍，不然无法安装最新版**
 
 ## :rocket: 配置后端（Colab部署）
 1. 使用4chan魔改版NovelAILeaks(naifu)的Colab后端：[配置后端](https://colab.research.google.com/drive/1_Ma71L6uGbtt6UQyA3FjqW2lcZ5Bjck-)
    - 配置需要**科学上网**（大陆无法访问Colab）和**谷歌账户**
 
-2. 请按照要求配置好后在**env**中填写生成的URL或*使用指令发送给机器人*
+2. 请按照要求配置好后在**env文件**中填写生成的URL或*使用指令发送给机器人*
    - 注意，URL格式通常为：`https://THIS-IS-A-SAMPLE.trycloudflare.com/` **注意在末尾加上斜杠“/”！**
 
    ![image](url.png)
 
 3. 发送请求报错：（报EOF相关的错误）
-   - 请在**env**中填写代理使用的的本地代理端口*或使用指令发送给机器人*，并确保开着代理
+   - 请在**env文件**中填写代理使用的的本地代理端口*或使用指令发送给机器人*，并确保开着代理
 
-5. Colab端无法配置：普通谷歌账户使用Colab会有GPU使用时限。解决方法：
+5. Colab端无法配置问题：普通谷歌账户使用Colab会有GPU使用时限。解决方法：
    - 等一段时间，一般半天或一天就会恢复使用
    - 多开几个谷歌账户轮流使用，重复步骤一
    - 付费购买或订阅

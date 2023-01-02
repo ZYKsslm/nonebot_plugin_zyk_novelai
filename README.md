@@ -17,7 +17,7 @@
 1. 更新tag数据库
 
 
-## 安装方式
+## :cd: 安装方式
 - #### 使用pip
 ```
 pip install nonebot_plugin_zyk_novelai

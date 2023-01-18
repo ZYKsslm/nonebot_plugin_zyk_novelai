@@ -1,6 +1,6 @@
 #!usr/bin/env python3
 # -*- coding: utf-8 -*-
-from nonebot.adapters.onebot.v11 import MessageEvent, MessageSegment, GROUP, PRIVATE_FRIEND, Bot
+from nonebot.adapters.onebot.v11 import MessageEvent, MessageSegment, GROUP, PRIVATE_FRIEND, Bot, Message
 from nonebot import on_regex, on_command
 from nonebot.params import CommandArg, RegexGroup, RegexDict
 from nonebot.permission import SUPERUSER
@@ -66,7 +66,8 @@ async def _(regex: tuple = RegexGroup()):
 
 # 搜索魔咒
 @search_tag.handle()
-async def _(tag=str(CommandArg())):
+async def _(tag: Message = CommandArg()):
+    tag = str(tag)
     tags = await search_tags(tag, proxies)
 
     if tags[0] is False:

@@ -14,7 +14,7 @@ from asyncio import sleep
 from re import findall, S
 from colorama import init, Fore
 
-__version__ = "2.9.5"
+__version__ = "2.9.5.1"
 
 # 构造响应器
 check_state = on_command(cmd="check state", permission=SUPERUSER, priority=5, block=True)

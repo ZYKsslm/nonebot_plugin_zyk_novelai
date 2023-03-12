@@ -1,5 +1,7 @@
 # :memo: nonebot_plugin_zyk_novelai
 
+[![Security Status](https://www.murphysec.com/badge/ZYKsslm/nonebot_plugin_zyk_novelai.svg)](https://www.murphysec.com/p/ZYKsslm/nonebot_plugin_zyk_novelai)
+
 *本插件基于Naifu端配置制作*
 
 *:page_facing_up: 使用本插件前请仔细阅读README文档*

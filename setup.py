@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="nonebot_plugin_zyk_novelai",
-    version="2.9.5.1",
+    version="2.9.5.2",
     packages=find_packages(),
     author="ZSSLM",
     author_email="3119964735@qq.com",

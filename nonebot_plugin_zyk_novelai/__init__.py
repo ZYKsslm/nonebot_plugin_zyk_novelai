@@ -7,7 +7,7 @@ from nonebot.permission import SUPERUSER
 from nonebot.log import logger
 from nonebot.exception import ActionFailed
 
-from .work import get_data, AsyncDownloadFile, random_prompt, search_tags, set_size
+from .work import get_data, AsyncDownloadFile, random_prompt, search_tags
 from .config import *
 from base64 import b64encode, b64decode
 from asyncio import sleep
@@ -20,9 +20,9 @@ __version__ = "2.9.5.1"
 check_state = on_command(cmd="check state", permission=SUPERUSER, priority=5, block=True)
 set_url = on_regex(pattern=r'set_url:(?P<url>.*/)', permission=SUPERUSER, priority=5, block=True)
 search_tag = on_command(cmd="补魔", aliases={"召唤魔咒", "搜索魔咒"}, permission=SUPERUSER, priority=5, block=True)
-pattern = r'^(?P<mode>ai绘图|AI绘图|ai作图|AI作图)( scale=(?P<scale>\d+))?( steps=(?P<steps>\d+))?( size=(?P<size>\d+x\d+))?( seed=(?P<seed>\d+))?( prompt=(?P<prompt>.+))?'
+pattern = r'^(?P<mode>ai绘图|AI绘图|ai作图|AI作图)( scale=(?P<scale>\d+))?( steps=(?P<steps>\d+))?( size=(?P<size>\d+x\d+))?( seed=(?P<seed>\d+))?( prompt="(?P<prompt>.+?)")?( uc="(?P<uc>.+?)")?'
 process_img = on_regex(pattern=pattern, permission=GROUP | PRIVATE_FRIEND, priority=10, block=True)
-img2img_pattern = r'^(img2img|以图生图).*?url=(?P<url>.*);.*?\](.*?strength=(?P<strength>\d\.\d))?(.*?noise=(?P<noise>\d\.\d))?(.*?scale=(?P<scale>\d+))?(.*?size=(?P<size>\d+x\d+))?(.*?seed=(?P<seed>\d+))?(.*?prompt=(?P<prompt>.+))?'
+img2img_pattern = r'^(img2img|以图生图).*?url=(?P<url>.*);.*?\](.*?strength=(?P<strength>\d\.\d))?(.*?noise=(?P<noise>\d\.\d))?(.*?scale=(?P<scale>\d+))?(.*?size=(?P<size>\d+x\d+))?(.*?seed=(?P<seed>\d+))?(.*?prompt="(?P<prompt>.+)")?(.*?uc="(?P<uc>.+)")?'
 img2img = on_regex(pattern=img2img_pattern, flags=S, permission=GROUP | PRIVATE_FRIEND, priority=10, block=True)
 
 # 获取后端URL
@@ -103,7 +103,7 @@ async def _(event: MessageEvent, bot: Bot, regex: dict = RegexDict()):
     steps = regex["steps"]
     size = regex["size"]
     prompt = regex["prompt"]
-    uc = "lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry"
+    uc = regex["uc"]
 
     if seed is None:
         seed = randint(0, pow(2, 32))
@@ -113,49 +113,28 @@ async def _(event: MessageEvent, bot: Bot, regex: dict = RegexDict()):
         steps = 28
     if size is None:
         size = "512x768"
-
-    # 这一段写得很乱，prompt和uc合起来了，要再分一次
+    if uc is None:
+        uc = "lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry"
     if prompt is None:
         if_randomP = True
-        num = randint(0, 1000)
+        num = randint(0, 50)
         prompt = random_prompt(num)
-        try:
-            uc = findall(r'uc=(?P<uc>.+)', str(event.get_plaintext()))[0]
-        except IndexError:
-            pass
     else:
-        # 获取随机prompt
         if "RandomP" in prompt:
             if_randomP = True
-            try:
-                num = findall(r'RandomP (?P<num>\d+)', prompt)[0]
-            except IndexError:
-                switch = True
-                await process_img.finish("请输入随机tag条数！", at_sender=True)
-            else:
-                prompt = random_prompt(num)
+            num = findall(r'RandomP (\d+)', prompt)[0]
+            prompt = random_prompt(num)
         else:
             if_randomP = False
 
-        try:
-            uc = findall(r'uc=(?P<uc>.+)', str(event.get_plaintext()))[0]
-        except IndexError:
-            pass
-        else:
-            if if_randomP is False:
-                prompt = findall(r'(?P<prompt>.+) uc', prompt)[0]
-
     # 处理图片尺寸
-    try:
-        size = size.split("x")
-    except AttributeError:
-        size = [512, 512]
+    size = size.split("x")
     size = [int(size[0]), int(size[1])]
     if size[0] > 1024 or size[1] > 1024:
         switch = True
         await process_img.finish("图片尺寸过大，请重新输入！", at_sender=True)
 
-    # 获取用户名
+    # 获取当前用户名
     name = (await bot.get_stranger_info(user_id=int(id_)))["nickname"]
 
     await process_img.send("正在生成图片，请稍等...", at_sender=True)
@@ -190,7 +169,7 @@ async def _(event: MessageEvent, bot: Bot, regex: dict = RegexDict()):
 
     # 把base64字符串转成bytes
     image = b64decode(data[1])
-    msg = f"\n{prompt}" + MessageSegment.image(image) if if_randomP == True else MessageSegment.image(image)
+    msg = f"\n{prompt}" + MessageSegment.image(image) if if_randomP else MessageSegment.image(image)
     switch = True
 
     try:
@@ -232,7 +211,7 @@ async def _(event: MessageEvent, bot: Bot, regex: dict = RegexDict()):
     scale = regex["scale"]
     size = regex["size"]
     prompt = regex["prompt"]
-    uc = "lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry"
+    uc = regex["uc"]
 
     if strength is None:
         strength = 0.7
@@ -255,40 +234,22 @@ async def _(event: MessageEvent, bot: Bot, regex: dict = RegexDict()):
 
     if prompt is None:
         if_randomP = True
-        num = randint(0, 1000)
+        num = randint(0, 50)
         prompt = random_prompt(num)
-        try:
-            uc = findall(r'uc=(?P<uc>.+)', str(event.get_plaintext()))[0]
-        except IndexError:
-            pass
     else:
-        # 获取随机prompt
         if "RandomP" in prompt:
             if_randomP = True
-            try:
-                num = findall(r'RandomP (?P<num>\d+)', prompt)[0]
-            except IndexError:
-                switch = True
-                await process_img.finish("请输入随机tag条数！", at_sender=True)
-            else:
-                prompt = random_prompt(num)
+            num = findall(r'RandomP (\d+)', prompt)[0]
+            prompt = random_prompt(num)
         else:
             if_randomP = False
-
-        try:
-            uc = findall(r'uc=(?P<uc>.+)', str(event.get_plaintext()))[0]
-        except IndexError:
-            pass
-        else:
-            if if_randomP is False:
-                prompt = findall(r'(?P<prompt>.+) uc', prompt)[0]
+        
+    if uc is None:
+        uc = "lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry"
 
     if size is not None:
         # 处理图片尺寸
-        try:
-            size = size.split("x")
-        except AttributeError:
-            size = [512, 512]
+        size = size.split("x")
         size = [int(size[0]), int(size[1])]
         if size[0] > 1024 or size[1] > 1024:
             switch = True
@@ -309,7 +270,7 @@ async def _(event: MessageEvent, bot: Bot, regex: dict = RegexDict()):
     logger.success(Fore.LIGHTGREEN_EX + f"{name}发送的图片获取成功！")
 
     if size is None:
-        size = set_size(image=img_data[1])
+        size = [512, 768]
 
     await img2img.send("正在生成图片，请稍等...", at_sender=True)
 
@@ -353,7 +314,7 @@ async def _(event: MessageEvent, bot: Bot, regex: dict = RegexDict()):
     logger.success(Fore.LIGHTGREEN_EX + f"{name}的图片生成成功！")
 
     image = b64decode(data[1])
-    msg = f"\n{prompt}" + MessageSegment.image(image) if if_randomP == True else MessageSegment.image(image)
+    msg = f"\n{prompt}" + MessageSegment.image(image) if if_randomP else MessageSegment.image(image)
     switch = True
 
     try:

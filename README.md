@@ -7,13 +7,10 @@
 *:page_facing_up: 使用本插件前请仔细阅读README文档*
 
 ## :sparkles: 新版本一览
-### :pushpin: version 2.9.5
+### :pushpin: version 2.9.5.2
 >都更新了哪些内容？
-1. 添加CD功能，CD时间可在env文件中配置。超级用户不受限，白名单用户不受限
-2. 添加黑名单和白名单，黑名单用户无法使用生图功能，白名单用户无CD限制。可在env文件中配置
-3. 移除 *set_port*，*set_time* 事件响应器（即本地代理端口和生图时间限制仅可在env文件中配置）
-4. *check state* 事件响应器更改为命令事件响应器
-5. 优化加载全局配置
+1. 优化代码结构
+2. 重写正则响应器，prompt和uc参数后都要带一对英文双引号
 
 ### :chart_with_upwards_trend: 预计未来更新的内容
 1. 更新tag数据库
@@ -85,7 +82,7 @@ novelai_post_url=https://THIS-IS-A-SAMPLE.trycloudflare.com/
 ai绘图 | AI绘图 | ai作图 | AI作图 [scale=] [steps=] [size=] [seed=] [prompt=] [uc=]
 
 eg：
-   ai绘图 steps=50 prompt={masterpiece}, best quality, {1 girl with black long hair and {{red light eyes}} wearing white dress and white leggings}, {loli:2}, full body, {sitting in sofa}, {looking at viewer} AND {dislike and void}, dark background
+   ai绘图 steps=50 prompt="{masterpiece}, best quality, {1 girl with black long hair and {{red light eyes}} wearing white dress and white leggings}, {loli:2}, full body, {sitting in sofa}, {looking at viewer} AND {dislike and void}, dark background"
 ```
 
 - #### *随机prompt指令参数*
@@ -95,10 +92,10 @@ eg：
 2. 使用*随机prompt指令参数*指定tag个数
 
    ```
-   prompt=RandomP (num)
+   prompt="RandomP (num)"
      
    eg：
-      prompt=RandomP 30
+      prompt="RandomP 30"
    ```
 
 ### 以图生图

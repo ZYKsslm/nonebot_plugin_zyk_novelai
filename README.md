@@ -168,10 +168,6 @@ eg：
 
 其中的**端口**即你的本地代理端口
 
->Naifu的正确食用姿势
-
-[Naifu魔咒咏唱：从入门到入土](https://github.com/ZYKsslm/Summoning-Magic-of-Naifu)
-
 ---
 :bug: 如果发现插件有BUG或有建议，欢迎**合理**提*Issue*
 
